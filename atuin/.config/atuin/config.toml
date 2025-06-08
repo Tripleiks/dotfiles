@@ -29,7 +29,7 @@ enter_accept = true
 keymap_mode = "auto"
 
 # Dialect for filtering
-dialect = "auto"
+dialect = "us"
 
 # Prefers exact matches when searching
 prefers_exact = false
@@ -38,7 +38,8 @@ prefers_exact = false
 show_preview = true
 
 # Enable or disable stats view
-stats = true
+[stats]
+enabled = true
 
 # Invert the order of the history
 invert = false
