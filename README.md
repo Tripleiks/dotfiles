@@ -93,6 +93,10 @@ cd ~/dotfiles
 - **gping** - Ping with a graph
   - Alias: `ping` → `gping`
 
+- **carbonyl** - Terminal web browser based on Chromium
+  - Alias: `browse` → `carbonyl`
+  - Full HTML5, CSS3, and JavaScript support in the terminal
+
 ## CLI Tools Quick Reference
 
 A quick reference guide for the most commonly used commands and aliases:
@@ -116,6 +120,7 @@ A quick reference guide for the most commonly used commands and aliases:
 | `dns` | `doggo` | Query DNS records |
 | `bw` | `sudo bandwhich` | Monitor bandwidth usage |
 | `ping` | `gping` | Ping with graphical output |
+| `browse` | `carbonyl` | Browse the web in terminal |
 
 ### Terminal Session Management
 
@@ -147,7 +152,7 @@ A quick reference guide for the most commonly used commands and aliases:
 | `z` | Jump to frequently used directory (zoxide) |
 | `cd -` | Go to previous directory |
 
-## Customization
+## Configuration Files
 
 Edit the following files to customize your setup:
 

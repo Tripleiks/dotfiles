@@ -155,16 +155,19 @@ alias synchzsh="cd ~/coding/github/dotfiles && ./sync.sh && cd -"
 # LazyGit alias
 alias lg="lazygit"
 
-# ---- Network Tools -----
-# DNS lookup with doggo (alternative to dig/nslookup)
+# ---- Network Monitoring Tools -----
+# Doggo (better dig)
 alias dig="doggo"
 alias dns="doggo"
 
-# Network bandwidth monitoring
+# Bandwhich (network utilization tool)
 alias bw="sudo bandwhich"
 
 # Graphical ping
 alias ping="gping"
+
+# Carbonyl (terminal browser)
+alias browse="carbonyl"
 
 # ---- File Management Tools -----
 # Ripgrep (better grep)
