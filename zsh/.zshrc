@@ -149,7 +149,7 @@ source ~/fzf-git.sh/fzf-git.sh
 
 # ---- Dotfiles Management -----
 # Alias for syncing dotfiles
-alias synchzsh="cd ~/dotfiles && ./sync.sh && cd -"
+alias synchzsh="cd ~/coding/github/dotfiles && ./sync.sh && cd -"
 
 # ---- Eza (better ls) -----
 # Define vivid color scheme for directories and files
@@ -174,3 +174,6 @@ alias cd="z"
 neofetch
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/Users/heino/.lmstudio/bin"
+
+# Merged content from GitHub dotfiles repository
+ eval "$(oh-my-posh init zsh --config 'https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/quick-term.omp.json')"

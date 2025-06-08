@@ -53,3 +53,7 @@ After making changes to your dotfiles, run:
 ```
 
 This will commit and push your changes to GitHub.
+
+## Repository History
+
+This dotfiles repository was created by merging two separate repositories on 2025-06-08.
