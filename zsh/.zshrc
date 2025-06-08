@@ -169,6 +169,9 @@ alias ping="gping"
 # Carbonyl (terminal browser)
 alias browse="carbonyl"
 
+# TLDR - Simplified man pages
+alias help="tldr"
+
 # ---- File Management Tools -----
 # Ripgrep (better grep)
 export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
