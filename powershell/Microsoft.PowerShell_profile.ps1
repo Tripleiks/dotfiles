@@ -751,14 +751,26 @@ function Sync-PowerShellProfile {
             return
         }
         
-        # Create target directory if it doesn't exist
-        $targetDir = Split-Path -Parent $targetProfile
-        if (-not (Test-Path $targetDir)) {
-            New-Item -ItemType Directory -Path $targetDir -Force | Out-Null
-        }
+        # Check if source and target are the same file (due to symlinks)
+        $sourceItem = Get-Item $sourceProfile -ErrorAction SilentlyContinue
+        $targetItem = Get-Item $targetProfile -ErrorAction SilentlyContinue
         
-        # Copy profile
-        Copy-Item -Path $sourceProfile -Destination $targetProfile -Force
+        if ($sourceItem -and $targetItem -and 
+            ($sourceItem.LinkType -eq "SymbolicLink" -or $targetItem.LinkType -eq "SymbolicLink") -and
+            ($sourceItem.Target -eq $targetItem.FullName -or $targetItem.Target -eq $sourceItem.FullName)) {
+            Write-ColorMessage "⚠️ Source and target are the same file due to symlinks. Skipping copy." $colors.Warning
+        }
+        else {
+            # Create target directory if it doesn't exist
+            $targetDir = Split-Path -Parent $targetProfile
+            if (-not (Test-Path $targetDir)) {
+                New-Item -ItemType Directory -Path $targetDir -Force | Out-Null
+            }
+            
+            # Copy profile
+            Copy-Item -Path $sourceProfile -Destination $targetProfile -Force
+            Write-ColorMessage "✅ Copied profile to dotfiles repository" $colors.Success
+        }
         
         # Copy scripts
         $sourceScriptsDir = "$HOME/.config/powershell/Scripts"
@@ -769,7 +781,27 @@ function Sync-PowerShellProfile {
                 New-Item -ItemType Directory -Path $targetScriptsDir -Force | Out-Null
             }
             
-            Copy-Item -Path "$sourceScriptsDir/*" -Destination $targetScriptsDir -Recurse -Force
+            # Get all script files
+            $scriptFiles = Get-ChildItem -Path $sourceScriptsDir -File
+            
+            foreach ($file in $scriptFiles) {
+                $targetFile = Join-Path $targetScriptsDir $file.Name
+                $sourceFile = $file.FullName
+                
+                # Check if source and target are the same file (due to symlinks)
+                $sourceItem = Get-Item $sourceFile -ErrorAction SilentlyContinue
+                $targetItem = Get-Item $targetFile -ErrorAction SilentlyContinue
+                
+                if ($sourceItem -and $targetItem -and 
+                    ($sourceItem.LinkType -eq "SymbolicLink" -or $targetItem.LinkType -eq "SymbolicLink") -and
+                    ($sourceItem.Target -eq $targetItem.FullName -or $targetItem.Target -eq $sourceItem.FullName)) {
+                    Write-ColorMessage "⚠️ Script $($file.Name) source and target are the same file due to symlinks. Skipping copy." $colors.Warning
+                }
+                else {
+                    Copy-Item -Path $sourceFile -Destination $targetFile -Force
+                    Write-ColorMessage "✅ Copied script $($file.Name) to dotfiles repository" $colors.Success
+                }
+            }
         }
         
         # Commit changes to dotfiles repository
