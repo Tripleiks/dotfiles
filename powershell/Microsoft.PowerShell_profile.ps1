@@ -13,12 +13,75 @@
     Date: 2025-06-09
 #>
 
-#region Variables and Configuration
-# Script paths
+#region Variables and Helper Functions
+# Set variables
 $DOTFILES_DIR = "$HOME/coding/github/dotfiles"
 $SCRIPTS_DIR = "$DOTFILES_DIR/powershell/Scripts"
 $MODULES_DIR = "$DOTFILES_DIR/powershell/Modules"
 $THEME_DIR = "$HOME/.config/oh-my-posh/themes"
+
+# Note: Using built-in $IsWindows, $IsMacOS, and $IsLinux automatic variables
+
+# Ensure Homebrew paths are in PATH
+# This ensures CLI tools are accessible in all environments (including Warp)
+if ($IsMacOS) {
+    # Common Homebrew paths on macOS
+    $homebrewPaths = @(
+        "/opt/homebrew/bin",
+        "/opt/homebrew/sbin",
+        "/usr/local/bin"
+    )
+    
+    # Add Homebrew paths to PATH if they're not already there
+    foreach ($path in $homebrewPaths) {
+        if (Test-Path $path) {
+            if (-not ($env:PATH -split [IO.Path]::PathSeparator).Contains($path)) {
+                $env:PATH = "$path" + [IO.Path]::PathSeparator + $env:PATH
+            }
+        }
+    }
+    
+    # Define full paths for common CLI tools to ensure they work in all environments
+    $cliToolPaths = @{
+        "eza" = "/opt/homebrew/bin/eza"
+        "bat" = "/opt/homebrew/bin/bat"
+        "rg" = "/opt/homebrew/bin/rg"
+        "fd" = "/opt/homebrew/bin/fd"
+        "jq" = "/usr/bin/jq"
+        "delta" = "/opt/homebrew/bin/delta"
+        "age" = "/opt/homebrew/bin/age"
+        "tldr" = "/opt/homebrew/bin/tldr"
+        "asciinema" = "/opt/homebrew/bin/asciinema"
+        "lazygit" = "/opt/homebrew/bin/lazygit"
+        "gping" = "/opt/homebrew/bin/gping"
+        "doggo" = "/opt/homebrew/bin/doggo"
+        "bandwhich" = "/opt/homebrew/bin/bandwhich"
+        "duf" = "/opt/homebrew/bin/duf"
+        "ranger" = "/opt/homebrew/bin/ranger"
+        "ncdu" = "/opt/homebrew/bin/ncdu"
+        "fzf" = "/opt/homebrew/bin/fzf"
+    }
+    
+    # Function to safely use CLI tools with full paths
+    function Use-CliTool {
+        param(
+            [Parameter(Mandatory=$true)]
+            [string]$Tool,
+            
+            [Parameter(ValueFromRemainingArguments=$true)]
+            $Arguments
+        )
+        
+        if ($cliToolPaths.ContainsKey($Tool) -and (Test-Path $cliToolPaths[$Tool])) {
+            & $cliToolPaths[$Tool] @Arguments
+        } else {
+            # Fallback to regular command if full path doesn't exist
+            & $Tool @Arguments
+        }
+    }
+    
+    Write-ColorMessage "[INFO] CLI tool paths configured for consistent access across all environments" $colors.Info
+}
 
 # Add custom modules directory to PSModulePath if it exists
 if (Test-Path $MODULES_DIR) {
@@ -259,7 +322,7 @@ if (Test-Command "eza") {
             $Remaining
         )
         
-        eza --icons $Remaining
+        Use-CliTool "eza" --icons $Remaining
     }
     
     function Get-ChildItemEzaLong {
@@ -268,7 +331,7 @@ if (Test-Command "eza") {
             $Remaining
         )
         
-        eza --icons --long --header --git $Remaining
+        Use-CliTool "eza" --icons --long --header $Remaining
     }
     
     function Get-ChildItemEzaAll {
@@ -277,7 +340,7 @@ if (Test-Command "eza") {
             $Remaining
         )
         
-        eza --icons --long --header --git --all $Remaining
+        Use-CliTool "eza" --icons --long --header --git --all $Remaining
     }
     
     function Get-ChildItemEzaTree {
@@ -286,7 +349,7 @@ if (Test-Command "eza") {
             $Remaining
         )
         
-        eza --icons --tree $Remaining
+        Use-CliTool "eza" --icons --tree $Remaining
     }
     
     function Get-ChildItemEzaTreeLong {
@@ -295,7 +358,7 @@ if (Test-Command "eza") {
             $Remaining
         )
         
-        eza --icons --tree --long --header --git $Remaining
+        Use-CliTool "eza" --icons --tree --long --header --git $Remaining
     }
     
     function Get-ChildItemEzaGrid {
@@ -304,7 +367,7 @@ if (Test-Command "eza") {
             $Remaining
         )
         
-        eza --icons --grid $Remaining
+        Use-CliTool "eza" --icons --grid $Remaining
     }
     
     function Get-ChildItemEzaGit {
@@ -313,7 +376,7 @@ if (Test-Command "eza") {
             $Remaining
         )
         
-        eza --icons --git-ignore --git $Remaining
+        Use-CliTool "eza" --icons --git-ignore --git $Remaining
     }
     
     function Get-ChildItemEzaLongGit {
@@ -322,7 +385,7 @@ if (Test-Command "eza") {
             $Remaining
         )
         
-        eza --icons --long --header --git-ignore --git $Remaining
+        Use-CliTool "eza" --icons --long --header --git-ignore --git $Remaining
     }
     
     function Get-ChildItemEzaSize {
@@ -331,7 +394,7 @@ if (Test-Command "eza") {
             $Remaining
         )
         
-        eza --icons --long --header --sort=size $Remaining
+        Use-CliTool "eza" --icons --long --header --sort=size $Remaining
     }
     
     function Get-ChildItemEzaModified {
@@ -340,7 +403,7 @@ if (Test-Command "eza") {
             $Remaining
         )
         
-        eza --icons --long --header --sort=modified $Remaining
+        Use-CliTool "eza" --icons --long --header --sort=modified $Remaining
     }
     
     # Create aliases for Eza functions
@@ -376,7 +439,7 @@ if (Test-Command "bat") {
             $Remaining
         )
         
-        bat --theme=ansi --style=numbers,changes,header $Remaining
+        Use-CliTool "bat" --theme=ansi --style=numbers,changes,header $Remaining
     }
     
     Set-Alias -Name cat -Value Get-ContentBat
@@ -390,7 +453,7 @@ if (Test-Command "rg") {
             $Remaining
         )
         
-        rg --smart-case --hidden --follow $Remaining
+        Use-CliTool "rg" --smart-case --hidden --follow $Remaining
     }
     
     Set-Alias -Name grep -Value Invoke-Ripgrep
@@ -405,9 +468,10 @@ if (Test-Command "fd") {
             $Remaining
         )
         
-        fd --hidden --follow $Remaining
+        Use-CliTool "fd" --hidden --follow $Remaining
     }
     
+    Set-Alias -Name find -Value Invoke-Fd
     Set-Alias -Name fd -Value Invoke-Fd
 }
 
@@ -419,7 +483,7 @@ if (Test-Command "tldr") {
             $Remaining
         )
         
-        tldr $Remaining
+        Use-CliTool "tldr" $Remaining
     }
     
     Set-Alias -Name help -Value Get-TldrHelp
@@ -433,7 +497,7 @@ if (Test-Command "delta") {
             $Remaining
         )
         
-        git diff $Remaining | delta
+        git diff $Remaining | Use-CliTool "delta"
     }
     
     Set-Alias -Name gdiff -Value Invoke-GitDiffDelta
@@ -448,10 +512,11 @@ if (Test-Command "age") {
         )
         
         if (Test-Command "age-encrypt") {
-            age-encrypt $Remaining
+            Use-CliTool "age" -e $Remaining
         }
         else {
-            Write-ColorMessage "❌ age-encrypt script not found. Please run the install script first." $colors.Error
+            Write-ColorMessage "❌ age-encrypt script not found. Using direct age command instead." $colors.Warning
+            Use-CliTool "age" -e $Remaining
         }
     }
     
@@ -462,10 +527,11 @@ if (Test-Command "age") {
         )
         
         if (Test-Command "age-decrypt") {
-            age-decrypt $Remaining
+            Use-CliTool "age" -d $Remaining
         }
         else {
-            Write-ColorMessage "❌ age-decrypt script not found. Please run the install script first." $colors.Error
+            Write-ColorMessage "❌ age-decrypt script not found. Using direct age command instead." $colors.Warning
+            Use-CliTool "age" -d $Remaining
         }
     }
     
@@ -481,7 +547,7 @@ if (Test-Command "asciinema") {
             $Remaining
         )
         
-        asciinema rec $Remaining
+        Use-CliTool "asciinema" rec $Remaining
     }
     
     function Start-AsciinemaPlayback {
@@ -490,7 +556,7 @@ if (Test-Command "asciinema") {
             $Remaining
         )
         
-        asciinema play $Remaining
+        Use-CliTool "asciinema" play $Remaining
     }
     
     function Start-AsciinemaUpload {
@@ -499,7 +565,7 @@ if (Test-Command "asciinema") {
             $Remaining
         )
         
-        asciinema upload $Remaining
+        Use-CliTool "asciinema" upload $Remaining
     }
     
     Set-Alias -Name rec -Value Start-AsciinemaRecording
@@ -515,7 +581,7 @@ if (Test-Command "lazygit") {
             $Remaining
         )
         
-        lazygit $Remaining
+        Use-CliTool "lazygit" $Remaining
     }
     
     Set-Alias -Name lg -Value Start-LazyGit
@@ -529,7 +595,7 @@ if (Test-Command "gping") {
             $Remaining
         )
         
-        gping $Remaining
+        Use-CliTool "gping" $Remaining
     }
     
     Set-Alias -Name ping -Value Start-GPing
@@ -543,7 +609,7 @@ if (Test-Command "doggo") {
             $Remaining
         )
         
-        doggo $Remaining
+        Use-CliTool "doggo" $Remaining
     }
     
     Set-Alias -Name dig -Value Invoke-Doggo
@@ -559,10 +625,10 @@ if (Test-Command "bandwhich") {
         )
         
         if ($IsWindows) {
-            bandwhich $Remaining
+            Use-CliTool "bandwhich" $Remaining
         }
         else {
-            sudo bandwhich $Remaining
+            sudo $(Use-CliTool "bandwhich" $Remaining)
         }
     }
     
@@ -577,7 +643,7 @@ if (Test-Command "duf") {
             $Remaining
         )
         
-        duf $Remaining
+        Use-CliTool "duf" $Remaining
     }
     
     Set-Alias -Name du -Value Invoke-Duf
@@ -592,7 +658,7 @@ if (Test-Command "ranger") {
             $Remaining
         )
         
-        ranger $Remaining
+        Use-CliTool "ranger" $Remaining
     }
     
     Set-Alias -Name fm -Value Start-Ranger
@@ -606,7 +672,7 @@ if (Test-Command "ncdu") {
             $Remaining
         )
         
-        ncdu --color dark $Remaining
+        Use-CliTool "ncdu" --color dark $Remaining
     }
     
     Set-Alias -Name ncdu -Value Start-Ncdu
@@ -620,7 +686,7 @@ if (Test-Command "carbonyl") {
             $Remaining
         )
         
-        carbonyl $Remaining
+        Use-CliTool "carbonyl" $Remaining
     }
     
     Set-Alias -Name browse -Value Start-Carbonyl
