@@ -8,7 +8,7 @@ A comprehensive PowerShell profile for macOS that integrates with dotfiles, auto
 - **CLI Tool Integration**: Detects and configures CLI tools installed via Homebrew
 - **Dotfiles Integration**: Seamlessly integrates with the existing dotfiles system
 - **Custom Aliases**: Provides aliases for common commands and tools
-- **Enhanced UI**: Configures PSReadLine, Terminal-Icons, and Oh My Posh
+- **Enhanced UI**: Configures PSReadLine, eza with icons, and Oh My Posh
 - **Utility Functions**: Includes helpful functions for Git, navigation, and system management
 
 ## Installation
@@ -85,7 +85,6 @@ updateall
 | Module | Description |
 |--------|-------------|
 | PSReadLine | Enhanced command line editing |
-| Terminal-Icons | File and folder icons |
 | posh-git | Git integration |
 | oh-my-posh | Prompt theming engine |
 | z | Directory jumper |
@@ -98,7 +97,7 @@ The profile includes integrations with the following CLI tools:
 
 | Tool | Aliases | Description |
 |------|---------|-------------|
-| eza | ez, ll, la, lt, llt, lg, lsg, llg, lss, lsm | Modern ls replacement |
+| eza | ez, ll, la, lt, llt, lg, lsg, llg, lss, lsm | Modern ls replacement with built-in icons |
 | bat | cat | Cat with syntax highlighting |
 | ripgrep | grep, rg | Fast grep replacement |
 | fd | fd | Fast find alternative |

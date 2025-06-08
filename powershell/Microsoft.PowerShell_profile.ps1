@@ -163,7 +163,6 @@ function Initialize-PowerShellEnvironment {
 # Import required modules if available
 $requiredModules = @(
     @{ Name = "PSReadLine"; MinVersion = "2.2.0" },
-    @{ Name = "Terminal-Icons"; MinVersion = "0.10.0" },
     @{ Name = "posh-git"; MinVersion = "1.0.0" },
     @{ Name = "oh-my-posh"; MinVersion = "7.0.0" },
     @{ Name = "z"; MinVersion = "1.1.13" },
@@ -210,49 +209,8 @@ if (Get-Module -Name PSReadLine) {
     Write-ColorMessage "[INFO] PSReadLine loaded and configured with custom colors." $colors.Info
 }
 
-# Configure Terminal-Icons if available
-if (Get-Module -Name Terminal-Icons) {
-    # Use emoji icons for macOS
-    if ($IsMacOS) {
-        $emojiIcons = @{
-            # Folders
-            Folder            = "📁"
-            SymbolicLinkFolder = "🔗"
-            GitFolder         = "📂"
-            # Files
-            File              = "📄"
-            SymbolicLinkFile  = "🔗"
-            ExecutableFile    = "⚙️"
-            # Special files
-            TextFile          = "📝"
-            ImageFile         = "🖼️"
-            VideoFile         = "🎬"
-            AudioFile         = "🎵"
-            ZipFile           = "🗜️"
-            CodeFile          = "💻"
-            ConfigFile        = "⚙️"
-            DocFile           = "📚"
-            HiddenFile        = "👻"
-            # Git files
-            GitIgnoreFile     = "🚫"
-            GitConfigFile     = "⚙️"
-        }
-        
-        # Try different approaches to set Terminal-Icons theme
-        try {
-            # First try the direct approach
-            Set-TerminalIconsTheme -IconTheme $emojiIcons
-        } catch {
-            # If that fails, try to set the theme through the module's exported variable
-            $Global:TerminalIconsSettings.IconTheme = $emojiIcons
-        }
-        Write-ColorMessage "[INFO] Custom file icons enabled with emoji support for macOS." $colors.Info
-    } else {
-        Write-ColorMessage "[INFO] Terminal-Icons loaded with default theme." $colors.Info
-    }
-} else {
-    Write-ColorMessage "[WARNING] Terminal-Icons module not found. Install it with: Install-Module Terminal-Icons -Scope CurrentUser" $colors.Warning
-}
+# Note: We're using eza's built-in icons instead of Terminal-Icons for a more consistent experience
+Write-ColorMessage "[INFO] Using eza's built-in icons for file listings." $colors.Info
 
 # Configure oh-my-posh (using the executable instead of the module)
 if (Test-Command "oh-my-posh") {

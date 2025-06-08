@@ -121,11 +121,6 @@ $requiredModules = @(
         Description = "PSReadLine (enhanced command line editing)"
     },
     @{
-        Name = "Terminal-Icons"
-        MinimumVersion = "0.10.0"
-        Description = "Terminal-Icons (file and folder icons)"
-    },
-    @{
         Name = "posh-git"
         MinimumVersion = "1.0.0"
         Description = "posh-git (Git integration)"
