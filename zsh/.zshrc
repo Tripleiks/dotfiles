@@ -155,6 +155,60 @@ alias synchzsh="cd ~/coding/github/dotfiles && ./sync.sh && cd -"
 # LazyGit alias
 alias lg="lazygit"
 
+# ---- Network Tools -----
+# DNS lookup with doggo (alternative to dig/nslookup)
+alias dig="doggo"
+alias dns="doggo"
+
+# Network bandwidth monitoring
+alias bw="sudo bandwhich"
+
+# Graphical ping
+alias ping="gping"
+
+# ---- File Management Tools -----
+# Ripgrep (better grep)
+export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
+alias grep="rg"
+alias rg="rg"
+
+# Ranger file manager
+alias fm="ranger"
+
+# Disk usage with duf
+alias du="duf"
+alias df="duf"
+
+# ---- Terminal Session Management -----
+# Tmux configuration
+alias tmx="tmux"
+alias tn="tmux new -s"
+alias ta="tmux attach -t"
+alias tl="tmux list-sessions"
+alias tk="tmux kill-session -t"
+
+# Auto-start tmux if not already in a tmux session
+if [ -z "$TMUX" ] && [ -n "$SSH_CONNECTION" ]; then
+  tmux attach -t default || tmux new -s default
+fi
+
+# ---- Command History Tools -----
+# Atuin - better shell history
+if command -v atuin &> /dev/null; then
+  eval "$(atuin init zsh)"
+  # Use up arrow key for atuin search
+  bindkey '^[[A' _atuin_search_widget
+fi
+
+# McFly - better Ctrl+R
+if command -v mcfly &> /dev/null; then
+  eval "$(mcfly init zsh)"
+  # Enable context-aware suggestions
+  export MCFLY_RESULTS=20
+  export MCFLY_INTERFACE_VIEW="TOP"
+  export MCFLY_DISABLE_MENU=FALSE
+fi
+
 # ---- Eza (better ls) -----
 # Define vivid color scheme for directories and files
 export LS_COLORS="di=1;34:ln=1;36:so=1;35:pi=1;33:ex=1;32:bd=1;33:cd=1;33:su=1;41:sg=1;43:tw=1;42:ow=1;43"
