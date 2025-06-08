@@ -311,6 +311,13 @@ link_dotfiles() {
   create_symlink "$DOTFILES_DIR/age/decrypt.sh" "$HOME/.local/bin/age-decrypt"
   chmod +x "$HOME/.local/bin/age-encrypt" "$HOME/.local/bin/age-decrypt"
   
+  # PowerShell configuration
+  mkdir -p "$HOME/.config/powershell/Scripts"
+  create_symlink "$DOTFILES_DIR/powershell/Microsoft.PowerShell_profile.ps1" "$HOME/.config/powershell/Microsoft.PowerShell_profile.ps1"
+  create_symlink "$DOTFILES_DIR/powershell/Scripts/Install-RequiredModules.ps1" "$HOME/.config/powershell/Scripts/Install-RequiredModules.ps1"
+  create_symlink "$DOTFILES_DIR/powershell/Scripts/Install-CliTools.ps1" "$HOME/.config/powershell/Scripts/Install-CliTools.ps1"
+  chmod +x "$HOME/.config/powershell/Scripts/Install-RequiredModules.ps1" "$HOME/.config/powershell/Scripts/Install-CliTools.ps1"
+  
   print_success "Dotfiles linked"
 }
 

@@ -9,8 +9,9 @@ A personal dotfiles management system for zsh and PowerShell configuration, CLI 
 - Nerd Fonts installation for proper icon rendering
 - Oh My Posh with custom theme for beautiful prompts
 - zsh-git-prompt for enhanced Git status information
+- Ultimate PowerShell Profile for macOS with automatic dependency management
 - Easy setup on new machines with a single command
-- Synchronization between machines with a simple `synchzsh` command
+- Synchronization between machines with simple `synchzsh` and `syncps` commands
 - Backup of existing configuration before installation
 - Cross-platform compatibility (macOS and Linux)
 
@@ -32,6 +33,7 @@ cd ~/dotfiles
 ## What's Included
 
 - zsh configuration (.zshrc, .zshenv, etc.)
+- PowerShell configuration with automatic module and CLI tool installation
 - Oh My Zsh setup with custom themes and plugins
 - Oh My Posh with custom theme (`my-quick-term.omp.json`)
 - Nerd Fonts installation (FiraCode, Hack, JetBrainsMono, Meslo)
@@ -41,8 +43,21 @@ cd ~/dotfiles
 - Custom aliases and functions
 - File management tools (ripgrep, ranger, duf)
 - Network monitoring tools (doggo, bandwhich, gping)
+- Security tools (age encryption)
 
 ## Enhanced Tools
+
+### PowerShell Profile
+
+- **Ultimate PowerShell Profile** - Comprehensive PowerShell configuration for macOS
+  - Automatically checks for and installs required PowerShell modules and CLI tools
+  - Integrates with existing dotfiles synchronization system
+  - Configures PSReadLine with syntax highlighting and command prediction
+  - Sets up Terminal-Icons with emoji support for macOS
+  - Configures Oh My Posh with the same custom theme as zsh
+  - Provides aliases for all CLI tools consistent with zsh aliases
+  - Includes utility functions for Git, navigation, and system management
+  - Synchronization command `syncps` for keeping profile in sync with dotfiles repo
 
 ### Terminal Session Management
 
@@ -137,7 +152,7 @@ A quick reference guide for the most commonly used commands and aliases:
 | `ping` | `gping` | Ping with graphical output |
 | `browse` | `carbonyl` | Browse the web in terminal |
 
-### Terminal Session Management
+### Terminal Management
 
 | Alias | Command | Description |
 |-------|---------|-------------|
@@ -188,6 +203,16 @@ A quick reference guide for the most commonly used commands and aliases:
 |-------|---------|-------------|
 | `encrypt` | `age-encrypt` | Encrypt files using age |
 | `decrypt` | `age-decrypt` | Decrypt files using age |
+
+### PowerShell Tools
+
+| Alias | Command | Description |
+|-------|---------|-------------|
+| `syncps` | `Sync-PowerShellProfile` | Sync PowerShell profile with dotfiles repo |
+| `updatemodules` | `Update-AllModules` | Update PowerShell modules |
+| `brewup` | `Update-HomebrewPackages` | Update Homebrew packages |
+| `updateall` | `Update-AllPackages` | Update both modules and Homebrew packages |
+| `sysinfo` | `Get-SystemInfo` | Display system information |
 
 ## Configuration Files
 

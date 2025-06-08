@@ -69,6 +69,11 @@ update_dotfiles() {
   cp -f "$HOME/.gitconfig" "$DOTFILES_DIR/git/.gitconfig" 2>/dev/null || true
   cp -f "$HOME/.gitignore_global" "$DOTFILES_DIR/git/.gitignore_global" 2>/dev/null || true
   
+  # Update PowerShell configuration
+  mkdir -p "$DOTFILES_DIR/powershell/Scripts"
+  cp -f "$HOME/.config/powershell/Microsoft.PowerShell_profile.ps1" "$DOTFILES_DIR/powershell/Microsoft.PowerShell_profile.ps1" 2>/dev/null || true
+  cp -rf "$HOME/.config/powershell/Scripts/" "$DOTFILES_DIR/powershell/" 2>/dev/null || true
+  
   # Update Brewfile
   if command -v brew >/dev/null 2>&1; then
     print_message "Updating Brewfile..." "$YELLOW"
