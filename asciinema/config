@@ -1,0 +1,25 @@
+# asciinema configuration file
+
+# Command to record (default: $SHELL)
+# command = /bin/bash -l
+
+# Terminal colors (default: xterm-256color)
+term = xterm-256color
+
+# Maximum idle time in seconds (default: off)
+idle_time_limit = 2
+
+# Play speed (default: 1)
+speed = 1
+
+# Title of the asciicast
+# title = 
+
+# Whether to show command typing (default: yes)
+# show_typing = yes
+
+# Additional environment variables to be exported in the recorded shell
+# env = EDITOR=vim
+
+# Path to save recordings (default: ~/.local/share/asciinema)
+# rec_path = ~/.local/share/asciinema

@@ -295,7 +295,12 @@ link_dotfiles() {
   create_symlink "$DOTFILES_DIR/atuin/.config/atuin/config.toml" "$HOME/.config/atuin/config.toml"
   
   # McFly configuration
+  mkdir -p "$HOME/.config"
   create_symlink "$DOTFILES_DIR/mcfly/.mcfly.toml" "$HOME/.mcfly.toml"
+  
+  # Asciinema configuration
+  mkdir -p "$HOME/.config/asciinema"
+  create_symlink "$DOTFILES_DIR/asciinema/config" "$HOME/.config/asciinema/config"
   
   print_success "Dotfiles linked"
 }

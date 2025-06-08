@@ -100,6 +100,10 @@ cd ~/dotfiles
 - **tealdeer** - Simplified and community-driven man pages with practical examples
   - Alias: `help` → `tldr`
 
+- **asciinema** - Terminal session recorder
+  - Aliases: `rec` → `asciinema rec`, `play` → `asciinema play`, `upload` → `asciinema upload`
+  - Record, replay, and share terminal sessions
+
 ## CLI Tools Quick Reference
 
 A quick reference guide for the most commonly used commands and aliases:
@@ -160,6 +164,14 @@ A quick reference guide for the most commonly used commands and aliases:
 | Alias | Command | Description |
 |-------|---------|-------------|
 | `help` | `tldr` | Show simplified command examples |
+
+### Recording Tools
+
+| Alias | Command | Description |
+|-------|---------|-------------|
+| `rec` | `asciinema rec` | Record terminal session |
+| `play` | `asciinema play` | Play recorded terminal session |
+| `upload` | `asciinema upload` | Upload recording to asciinema.org |
 
 ## Configuration Files
 

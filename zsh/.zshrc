@@ -172,6 +172,11 @@ alias browse="carbonyl"
 # TLDR - Simplified man pages
 alias help="tldr"
 
+# Asciinema - Terminal recorder
+alias rec="asciinema rec"
+alias play="asciinema play"
+alias upload="asciinema upload"
+
 # ---- File Management Tools -----
 # Ripgrep (better grep)
 export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
