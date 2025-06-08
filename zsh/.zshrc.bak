@@ -149,7 +149,7 @@ source ~/fzf-git.sh/fzf-git.sh
 
 # ---- Dotfiles Management -----
 # Alias for syncing dotfiles
-alias synchzsh="cd ~/coding/github/dotfiles && ./sync.sh && cd -"
+alias synchzsh="cd ~/dotfiles && ./sync.sh && cd -"
 
 # ---- Eza (better ls) -----
 # Define vivid color scheme for directories and files
