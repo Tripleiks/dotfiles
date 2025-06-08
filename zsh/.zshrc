@@ -155,29 +155,29 @@ alias synchzsh="cd ~/coding/github/dotfiles && ./sync.sh && cd -"
 # LazyGit alias
 alias lg="lazygit"
 
-# ---- Network Tools -----
-# DNS lookup with doggo (alternative to dig/nslookup)
+# ---- Network Monitoring Tools -----
+# Doggo (better dig)
 alias dig="doggo"
 alias dns="doggo"
 
-# Network bandwidth monitoring
+# Bandwhich (network utilization tool)
 alias bw="sudo bandwhich"
 
 # Graphical ping
 alias ping="gping"
 
+# Carbonyl (terminal browser)
+alias browse="carbonyl"
+
 # ---- File Management Tools -----
 # Ripgrep (better grep)
 export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
-alias grep="rg"
-alias rg="rg"
-
-# Ranger file manager
+alias grep="rg --smart-case"
+alias rg="rg --smart-case"
 alias fm="ranger"
-
-# Disk usage with duf
 alias du="duf"
 alias df="duf"
+alias ncdu="ncdu --color dark"
 
 # ---- Terminal Session Management -----
 # Tmux configuration
