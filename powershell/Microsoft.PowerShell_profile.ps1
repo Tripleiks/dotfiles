@@ -213,7 +213,20 @@ if (Get-Module -Name PSReadLine) {
 Write-ColorMessage "[INFO] Using eza's built-in icons for file listings." $colors.Info
 
 # Configure oh-my-posh (using the executable instead of the module)
-if (Test-Command "oh-my-posh") {
+# Use full path to oh-my-posh to ensure it works in all environments (including Warp)
+$ohMyPoshPath = "/opt/homebrew/bin/oh-my-posh"
+
+if (Test-Path $ohMyPoshPath) {
+    # Set the oh-my-posh theme
+    if (Test-Path "$THEME_DIR/my-quick-term.omp.json") {
+        & $ohMyPoshPath init pwsh --config "$THEME_DIR/my-quick-term.omp.json" | Invoke-Expression
+        Write-ColorMessage "[INFO] Oh My Posh initialized with custom theme: $THEME_DIR/my-quick-term.omp.json" $colors.Info
+    } else {
+        & $ohMyPoshPath init pwsh --config "$env:POSH_THEMES_PATH/paradox.omp.json" | Invoke-Expression
+        Write-ColorMessage "[INFO] Oh My Posh initialized with default theme: paradox" $colors.Info
+    }
+} elseif (Test-Command "oh-my-posh") {
+    # Fallback to PATH if the specific path doesn't exist
     # Set the oh-my-posh theme
     if (Test-Path "$THEME_DIR/my-quick-term.omp.json") {
         oh-my-posh init pwsh --config "$THEME_DIR/my-quick-term.omp.json" | Invoke-Expression
