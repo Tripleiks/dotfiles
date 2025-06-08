@@ -280,6 +280,13 @@ link_dotfiles() {
   create_symlink "$DOTFILES_DIR/git/.gitconfig" "$HOME/.gitconfig"
   create_symlink "$DOTFILES_DIR/git/.gitignore_global" "$HOME/.gitignore_global"
   
+  # Ripgrep configuration
+  create_symlink "$DOTFILES_DIR/ripgrep/.ripgreprc" "$HOME/.ripgreprc"
+  
+  # Ranger configuration
+  mkdir -p "$HOME/.config/ranger"
+  create_symlink "$DOTFILES_DIR/ranger/.config/ranger/rc.conf" "$HOME/.config/ranger/rc.conf"
+  
   print_success "Dotfiles linked"
 }
 

@@ -166,6 +166,19 @@ alias bw="sudo bandwhich"
 # Graphical ping
 alias ping="gping"
 
+# ---- File Management Tools -----
+# Ripgrep (better grep)
+export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
+alias grep="rg"
+alias rg="rg"
+
+# Ranger file manager
+alias fm="ranger"
+
+# Disk usage with duf
+alias du="duf"
+alias df="duf"
+
 # ---- Eza (better ls) -----
 # Define vivid color scheme for directories and files
 export LS_COLORS="di=1;34:ln=1;36:so=1;35:pi=1;33:ex=1;32:bd=1;33:cd=1;33:su=1;41:sg=1;43:tw=1;42:ow=1;43"
