@@ -287,6 +287,16 @@ link_dotfiles() {
   mkdir -p "$HOME/.config/ranger"
   create_symlink "$DOTFILES_DIR/ranger/.config/ranger/rc.conf" "$HOME/.config/ranger/rc.conf"
   
+  # Tmux configuration
+  create_symlink "$DOTFILES_DIR/tmux/.tmux.conf" "$HOME/.tmux.conf"
+  
+  # Atuin configuration
+  mkdir -p "$HOME/.config/atuin"
+  create_symlink "$DOTFILES_DIR/atuin/.config/atuin/config.toml" "$HOME/.config/atuin/config.toml"
+  
+  # McFly configuration
+  create_symlink "$DOTFILES_DIR/mcfly/.mcfly.toml" "$HOME/.mcfly.toml"
+  
   print_success "Dotfiles linked"
 }
 

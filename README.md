@@ -44,6 +44,27 @@ cd ~/dotfiles
 
 ## Enhanced Tools
 
+### Terminal Session Management
+
+- **tmux** - Terminal multiplexer for managing multiple terminal sessions
+  - Configured with custom `.tmux.conf` for improved keybindings and visuals
+  - Prefix key changed from `Ctrl+B` to `Ctrl+A` for easier access
+  - Aliases: `tmx` → `tmux`, `tn` → `tmux new -s`, `ta` → `tmux attach -t`, `tl` → `tmux list-sessions`, `tk` → `tmux kill-session -t`
+  - Mouse mode enabled for easy pane/window selection
+  - Vi mode for navigation and copy/paste
+
+### Command History Tools
+
+- **atuin** - Shell history tool with search, sync, and statistics
+  - Configured to use up arrow key for history search
+  - Stores history in a SQLite database with context
+  - Fuzzy search enabled for better matching
+
+- **mcfly** - Intelligent Ctrl+R replacement with context-aware suggestions
+  - Configured with vim keybindings and TOP interface view
+  - Learns from your command usage patterns
+  - Shows 20 results with context-aware suggestions
+
 ### File Management Tools
 
 - **ripgrep** (`rg`) - Lightning-fast search tool, better than grep

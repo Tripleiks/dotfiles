@@ -1,0 +1,50 @@
+# Atuin configuration file
+
+# The directory for the database
+db_path = "~/.local/share/atuin/history.db"
+
+# Auto-sync frequency in minutes
+auto_sync = 10
+
+# Enable or disable automatic sync
+sync_frequency = "10m"
+sync_address = "https://api.atuin.sh"
+
+# Enable or disable automatic update checks
+update_check = true
+
+# Configure the style
+style = "auto"
+
+# Set filtering mode
+filter_mode = "global"
+
+# Configure search mode
+search_mode = "fuzzy"
+
+# Inline search key bindings
+enter_accept = true
+
+# Keyboard shortcuts
+keymap_mode = "auto"
+
+# Dialect for filtering
+dialect = "auto"
+
+# Prefers exact matches when searching
+prefers_exact = false
+
+# Show preview
+show_preview = true
+
+# Enable or disable stats view
+stats = true
+
+# Invert the order of the history
+invert = false
+
+# Enable or disable the welcome message
+show_help = true
+
+# Set the maximum number of history entries
+history_size = 10000

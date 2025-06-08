@@ -1,0 +1,23 @@
+# McFly configuration file
+
+# Fuzzy search results
+fuzzy = true
+
+# Results interface
+results_sort = "RANK"  # RANK, LAST_RUN, CHRONOLOGICAL
+results_count = 10
+
+# Interface
+interface_view = "TOP"  # TOP, BOTTOM
+results_line_min_length = 4
+
+# Behavior
+results_disappear = true
+key_scheme = "vim"  # emacs, vim
+
+# Performance
+history_format = "zsh"
+history_size = 10000
+
+# Appearance
+light_theme = false
