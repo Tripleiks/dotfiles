@@ -39,6 +39,34 @@ cd ~/dotfiles
 - Terminal preferences
 - Git configuration
 - Custom aliases and functions
+- File management tools (ripgrep, ranger, duf)
+- Network monitoring tools (doggo, bandwhich, gping)
+
+## Enhanced Tools
+
+### File Management Tools
+
+- **ripgrep** (`rg`) - Lightning-fast search tool, better than grep
+  - Configured with `.ripgreprc` for smart case, colored output, and web file type
+  - Aliases: `grep` → `rg`, `rg` → `rg`
+
+- **ranger** - Terminal file manager with vim-like keybindings
+  - Configured with custom `rc.conf` for better visuals and functionality
+  - Alias: `fm` → `ranger`
+
+- **duf** - User-friendly disk usage utility with colored output
+  - Aliases: `du` → `duf`, `df` → `duf`
+
+### Network Monitoring Tools
+
+- **doggo** - Modern DNS client for querying DNS records
+  - Aliases: `dig` → `doggo`, `dns` → `doggo`
+
+- **bandwhich** - Terminal bandwidth utilization tool
+  - Alias: `bw` → `sudo bandwhich`
+
+- **gping** - Ping with a graph
+  - Alias: `ping` → `gping`
 
 ## Customization
 
@@ -47,6 +75,8 @@ Edit the following files to customize your setup:
 - `zsh/.zshrc` - Main zsh configuration
 - `brew/Brewfile` - List of Homebrew packages to install
 - `git/.gitconfig` - Git configuration
+- `ripgrep/.ripgreprc` - ripgrep configuration
+- `ranger/.config/ranger/rc.conf` - ranger configuration
 
 ## Syncing Changes
 
