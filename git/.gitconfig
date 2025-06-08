@@ -26,3 +26,5 @@
 
 [diff]
     colorMoved = default
+[include]
+	path = /Users/heino/.gitconfig-delta
