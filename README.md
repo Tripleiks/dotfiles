@@ -89,6 +89,59 @@ cd ~/dotfiles
 - **gping** - Ping with a graph
   - Alias: `ping` → `gping`
 
+## CLI Tools Quick Reference
+
+A quick reference guide for the most commonly used commands and aliases:
+
+### File Management
+
+| Alias | Command | Description |
+|-------|---------|-------------|
+| `grep` | `rg --smart-case` | Search text with ripgrep |
+| `rg` | `rg --smart-case` | Search text with ripgrep |
+| `fm` | `ranger` | Open ranger file manager |
+| `du` | `duf` | Display disk usage |
+| `df` | `duf` | Display filesystem information |
+
+### Network Tools
+
+| Alias | Command | Description |
+|-------|---------|-------------|
+| `dig` | `doggo` | Query DNS records |
+| `dns` | `doggo` | Query DNS records |
+| `bw` | `sudo bandwhich` | Monitor bandwidth usage |
+| `ping` | `gping` | Ping with graphical output |
+
+### Terminal Session Management
+
+| Alias | Command | Description |
+|-------|---------|-------------|
+| `tmx` | `tmux` | Start tmux session |
+| `tn` | `tmux new -s` | Create new named session |
+| `ta` | `tmux attach -t` | Attach to existing session |
+| `tl` | `tmux list-sessions` | List all sessions |
+| `tk` | `tmux kill-session -t` | Kill a specific session |
+
+### Command History
+
+| Key | Tool | Description |
+|-----|------|-------------|
+| `↑` (Up Arrow) | atuin | Search command history with context |
+| `Ctrl+R` | mcfly | Fuzzy search command history |
+
+### Git Tools
+
+| Alias | Command | Description |
+|-------|---------|-------------|
+| `lg` | `lazygit` | Open LazyGit terminal UI |
+
+### File Navigation
+
+| Command | Description |
+|---------|-------------|
+| `z` | Jump to frequently used directory (zoxide) |
+| `cd -` | Go to previous directory |
+
 ## Customization
 
 Edit the following files to customize your setup:
