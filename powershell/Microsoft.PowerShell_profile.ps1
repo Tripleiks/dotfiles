@@ -14,6 +14,48 @@
 #>
 
 #region Variables and Helper Functions
+# Colors for output
+$colors = @{
+    Success = "Green"
+    Info = "Cyan"
+    Warning = "Yellow"
+    Error = "Red"
+    Emphasis = "Magenta"
+}
+
+# Helper functions that need to be defined early
+function Write-ColorMessage {
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$Message,
+        
+        [Parameter(Mandatory=$false)]
+        [string]$ForegroundColor = "White"
+    )
+    
+    Write-Host $Message -ForegroundColor $ForegroundColor
+}
+
+function Test-Command {
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$Command
+    )
+    
+    try {
+        if ($IsWindows) {
+            $null = Get-Command $Command -ErrorAction Stop
+        }
+        else {
+            $null = bash -c "command -v $Command" 2>$null
+        }
+        return $true
+    }
+    catch {
+        return $false
+    }
+}
+
 # Set variables
 $DOTFILES_DIR = "$HOME/coding/github/dotfiles"
 $SCRIPTS_DIR = "$DOTFILES_DIR/powershell/Scripts"
@@ -98,38 +140,7 @@ $colors = @{
 }
 #endregion
 
-#region Helper Functions
-function Write-ColorMessage {
-    param(
-        [Parameter(Mandatory=$true)]
-        [string]$Message,
-        
-        [Parameter(Mandatory=$false)]
-        [string]$ForegroundColor = "White"
-    )
-    
-    Write-Host $Message -ForegroundColor $ForegroundColor
-}
-
-function Test-Command {
-    param(
-        [Parameter(Mandatory=$true)]
-        [string]$Command
-    )
-    
-    try {
-        if ($IsWindows) {
-            $null = Get-Command $Command -ErrorAction Stop
-        }
-        else {
-            $null = bash -c "command -v $Command" 2>$null
-        }
-        return $true
-    }
-    catch {
-        return $false
-    }
-}
+#region Additional Helper Functions
 
 function Get-Greeting {
     $hour = (Get-Date).Hour
