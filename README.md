@@ -97,6 +97,9 @@ cd ~/dotfiles
   - Alias: `browse` → `carbonyl`
   - Full HTML5, CSS3, and JavaScript support in the terminal
 
+- **tealdeer** - Simplified and community-driven man pages with practical examples
+  - Alias: `help` → `tldr`
+
 ## CLI Tools Quick Reference
 
 A quick reference guide for the most commonly used commands and aliases:
@@ -151,6 +154,12 @@ A quick reference guide for the most commonly used commands and aliases:
 |---------|-------------|
 | `z` | Jump to frequently used directory (zoxide) |
 | `cd -` | Go to previous directory |
+
+### Documentation Tools
+
+| Alias | Command | Description |
+|-------|---------|-------------|
+| `help` | `tldr` | Show simplified command examples |
 
 ## Configuration Files
 
