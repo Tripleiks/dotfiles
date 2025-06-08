@@ -302,6 +302,15 @@ link_dotfiles() {
   mkdir -p "$HOME/.config/asciinema"
   create_symlink "$DOTFILES_DIR/asciinema/config" "$HOME/.config/asciinema/config"
   
+  # Git Delta configuration
+  create_symlink "$DOTFILES_DIR/git/.gitconfig-delta" "$HOME/.gitconfig-delta"
+  
+  # Age encryption helper scripts
+  mkdir -p "$HOME/.local/bin"
+  create_symlink "$DOTFILES_DIR/age/encrypt.sh" "$HOME/.local/bin/age-encrypt"
+  create_symlink "$DOTFILES_DIR/age/decrypt.sh" "$HOME/.local/bin/age-decrypt"
+  chmod +x "$HOME/.local/bin/age-encrypt" "$HOME/.local/bin/age-decrypt"
+  
   print_success "Dotfiles linked"
 }
 

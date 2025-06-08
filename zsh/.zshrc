@@ -177,6 +177,13 @@ alias rec="asciinema rec"
 alias play="asciinema play"
 alias upload="asciinema upload"
 
+# Age - File encryption
+alias encrypt="age-encrypt"
+alias decrypt="age-decrypt"
+
+# Delta - Better git diff
+alias gdiff="git diff | delta"
+
 # ---- File Management Tools -----
 # Ripgrep (better grep)
 export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"

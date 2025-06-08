@@ -104,6 +104,14 @@ cd ~/dotfiles
   - Aliases: `rec` → `asciinema rec`, `play` → `asciinema play`, `upload` → `asciinema upload`
   - Record, replay, and share terminal sessions
 
+- **age** - Simple, modern file encryption tool
+  - Aliases: `encrypt` → `age-encrypt`, `decrypt` → `age-decrypt`
+  - Secure file encryption with public/private keys or passphrases
+
+- **delta** - Syntax-highlighting pager for git and diff output
+  - Alias: `gdiff` → `git diff | delta`
+  - Side-by-side diffs with syntax highlighting and improved readability
+
 ## CLI Tools Quick Reference
 
 A quick reference guide for the most commonly used commands and aliases:
@@ -151,6 +159,7 @@ A quick reference guide for the most commonly used commands and aliases:
 | Alias | Command | Description |
 |-------|---------|-------------|
 | `lg` | `lazygit` | Open LazyGit terminal UI |
+| `gdiff` | `git diff \| delta` | Enhanced git diff with syntax highlighting |
 
 ### File Navigation
 
@@ -172,6 +181,13 @@ A quick reference guide for the most commonly used commands and aliases:
 | `rec` | `asciinema rec` | Record terminal session |
 | `play` | `asciinema play` | Play recorded terminal session |
 | `upload` | `asciinema upload` | Upload recording to asciinema.org |
+
+### Security Tools
+
+| Alias | Command | Description |
+|-------|---------|-------------|
+| `encrypt` | `age-encrypt` | Encrypt files using age |
+| `decrypt` | `age-decrypt` | Decrypt files using age |
 
 ## Configuration Files
 
