@@ -78,6 +78,10 @@ cd ~/dotfiles
 - **duf** - User-friendly disk usage utility with colored output
   - Aliases: `du` → `duf`, `df` → `duf`
 
+- **ncdu** - NCurses Disk Usage analyzer with interactive interface
+  - Alias: `ncdu` → `ncdu --color dark`
+  - Navigate with arrow keys, delete with `d`, quit with `q`
+
 ### Network Monitoring Tools
 
 - **doggo** - Modern DNS client for querying DNS records
@@ -102,6 +106,7 @@ A quick reference guide for the most commonly used commands and aliases:
 | `fm` | `ranger` | Open ranger file manager |
 | `du` | `duf` | Display disk usage |
 | `df` | `duf` | Display filesystem information |
+| `ncdu` | `ncdu --color dark` | Interactive disk usage analyzer |
 
 ### Network Tools
 
