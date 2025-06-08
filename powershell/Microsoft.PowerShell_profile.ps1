@@ -772,11 +772,70 @@ function Get-SystemInfo {
 Set-Alias -Name sysinfo -Value Get-SystemInfo
 
 # Function to sync PowerShell profile with dotfiles repository
+function Test-CliToolPaths {
+    param(
+        [switch]$UpdatePaths
+    )
+    
+    $missingTools = @()
+    $updatedPaths = @{}
+    
+    foreach ($tool in $cliToolPaths.Keys) {
+        $path = $cliToolPaths[$tool]
+        if (-not (Test-Path $path)) {
+            # Try to find the tool in PATH
+            try {
+                $foundPath = if ($IsWindows) {
+                    (Get-Command $tool -ErrorAction Stop).Source
+                } else {
+                    $(which $tool 2>$null)
+                }
+                
+                if ($foundPath) {
+                    $missingTools += "$tool (found at $foundPath)"
+                    if ($UpdatePaths) {
+                        $updatedPaths[$tool] = $foundPath
+                    }
+                } else {
+                    $missingTools += "$tool (not found in PATH)"
+                }
+            } catch {
+                $missingTools += "$tool (not found in PATH)"
+            }
+        }
+    }
+    
+    if ($missingTools.Count -gt 0) {
+        Write-ColorMessage "⚠️ Some CLI tool paths are incorrect:" $colors.Warning
+        foreach ($tool in $missingTools) {
+            Write-ColorMessage "   - $tool" $colors.Warning
+        }
+        
+        if ($UpdatePaths -and $updatedPaths.Count -gt 0) {
+            Write-ColorMessage "🔄 Updating CLI tool paths..." $colors.Info
+            foreach ($tool in $updatedPaths.Keys) {
+                $cliToolPaths[$tool] = $updatedPaths[$tool]
+                Write-ColorMessage "   - Updated $tool to $($updatedPaths[$tool])" $colors.Success
+            }
+        }
+    } else {
+        Write-ColorMessage "✅ All CLI tool paths are valid" $colors.Success
+    }
+    
+    return $missingTools.Count -eq 0
+}
+
 function Sync-PowerShellProfile {
     param(
         [switch]$Pull,
-        [switch]$Force
+        [switch]$Force,
+        [switch]$VerifyPaths
     )
+    
+    if ($VerifyPaths) {
+        Test-CliToolPaths -UpdatePaths
+        return
+    }
     
     if ($Pull) {
         # Pull changes from dotfiles repository
@@ -786,6 +845,9 @@ function Sync-PowerShellProfile {
         
         # Copy from dotfiles to local profile
         Invoke-SyncPowerShellProfile -Force:$Force
+        
+        # Verify CLI tool paths after sync
+        Test-CliToolPaths
         
         Write-ColorMessage "✅ PowerShell profile pulled from dotfiles repository and synced to local profile" $colors.Success
     }
@@ -852,6 +914,9 @@ function Sync-PowerShellProfile {
             }
         }
         
+        # Verify CLI tool paths before committing
+        Test-CliToolPaths
+        
         # Commit changes to dotfiles repository
         Push-Location $DOTFILES_DIR
         git add powershell
@@ -865,6 +930,7 @@ function Sync-PowerShellProfile {
 
 # Set aliases for syncing PowerShell profile
 Set-Alias -Name syncps -Value Sync-PowerShellProfile
+Set-Alias -Name checkpaths -Value Test-CliToolPaths
 
 # Function to update PowerShell modules
 function Update-AllModules {
