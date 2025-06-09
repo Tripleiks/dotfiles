@@ -214,7 +214,7 @@ install_nerd_fonts() {
 }
 
 # Install Oh My Zsh and Oh My Posh
-install_oh_my_zsh_and_posh() {
+install_oh_my_zsh_and_starship() {
   print_step "Installing Oh My Zsh"
   
   if [ ! -d "$HOME/.oh-my-zsh" ]; then
@@ -240,31 +240,34 @@ install_oh_my_zsh_and_posh() {
     print_success "Installed zsh-autosuggestions"
   fi
   
-  # powerlevel10k theme
-  if [ ! -d "$ZSH_CUSTOM/themes/powerlevel10k" ]; then
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$ZSH_CUSTOM/themes/powerlevel10k"
-    print_success "Installed powerlevel10k theme"
+  # you-should-use plugin
+  if [ ! -d "$ZSH_CUSTOM/plugins/you-should-use" ]; then
+    git clone https://github.com/MichaelAquilina/zsh-you-should-use.git "$ZSH_CUSTOM/plugins/you-should-use"
+    print_success "Installed you-should-use plugin"
   fi
   
-  # Install Oh My Posh
-  print_step "Installing Oh My Posh"
-  if ! command_exists oh-my-posh; then
+  # zsh-bat plugin
+  if [ ! -d "$ZSH_CUSTOM/plugins/zsh-bat" ]; then
+    git clone https://github.com/fdellwing/zsh-bat.git "$ZSH_CUSTOM/plugins/zsh-bat"
+    print_success "Installed zsh-bat plugin"
+  fi
+  
+  # Install Starship prompt
+  print_step "Installing Starship prompt"
+  if ! command_exists starship; then
     if [[ "$OSTYPE" == "darwin"* ]]; then
       # macOS
-      brew install jandedobbeleer/oh-my-posh/oh-my-posh
+      brew install starship
     elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
       # Linux
-      curl -s https://ohmyposh.dev/install.sh | bash -s
+      curl -sS https://starship.rs/install.sh | sh -s -- --yes
     fi
-    print_success "Oh My Posh installed"
+    print_success "Starship prompt installed"
   else
-    print_success "Oh My Posh already installed"
+    print_success "Starship prompt already installed"
   fi
   
-  # Set up Oh My Posh custom theme
-  mkdir -p "$HOME/.config/oh-my-posh/themes"
-  cp -f "$DOTFILES_DIR/oh-my-posh/themes/my-quick-term.omp.json" "$HOME/.config/oh-my-posh/themes/"
-  print_success "Oh My Posh custom theme installed"
+  print_success "Shell prompt configuration complete"
 }
 
 # Link dotfiles
@@ -375,11 +378,11 @@ main() {
   # Install Homebrew
   install_homebrew
   
-  # Install Nerd Fonts (required for Oh My Posh and terminal icons)
+  # Install Nerd Fonts (required for Starship prompt and terminal icons)
   install_nerd_fonts
   
-  # Install Oh My Zsh and Oh My Posh
-  install_oh_my_zsh_and_posh
+  # Install Oh My Zsh and Starship prompt
+  install_oh_my_zsh_and_starship
   
   # Install packages
   install_packages

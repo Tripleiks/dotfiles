@@ -140,10 +140,12 @@ _fzf_compgen_dir() {
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-#eval "$(starship init bash)"
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+# Load plugins
 plugins=(git zsh-autosuggestions zsh-syntax-highlighting you-should-use zsh-bat)
-eval "$(oh-my-posh init zsh --config /Users/heino/.config/oh-my-posh/themes/my-quick-term.omp.json)"
+
+# Initialize Starship prompt
+export STARSHIP_CONFIG="$HOME/.config/starship.toml"
+eval "$(starship init zsh)"
 eval $(thefuck --alias)
 source ~/fzf-git.sh/fzf-git.sh
 
