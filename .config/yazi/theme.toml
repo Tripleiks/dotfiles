@@ -1,0 +1,187 @@
+[mgr]
+cwd = { fg = "#FFFFFF" }
+
+# Tabs
+tab_active = { fg = "#FFFFFF", bg = "#1F2335", bold = true }
+tab_inactive = { fg = "#A9B1D6", bg = "#16161E" }
+tab_width = 1
+
+# Header
+header = { fg = "#A9B1D6" }
+header_path_prefix = { fg = "#7AA2F7" }
+header_path_folder = { fg = "#7AA2F7" }
+header_path_file = { fg = "#C0CAF5", bold = true }
+header_path_error = { fg = "#F7768E", bold = true }
+header_path_search = { fg = "#E0AF68", bold = true }
+
+# Borders
+border_symbol = "│"
+border_style = { fg = "#3B4261" }
+corner_top_left = "┌"
+corner_top_right = "┐"
+corner_bottom_left = "└"
+corner_bottom_right = "┘"
+corner_style = { fg = "#3B4261" }
+
+# Progress bar
+progress_label = { fg = "#A9B1D6" }
+progress_normal = { fg = "#7AA2F7", bg = "#3B4261" }
+progress_error = { fg = "#F7768E", bg = "#3B4261" }
+
+# Status
+status_normal = { fg = "#A9B1D6" }
+status_insert = { fg = "#9ECE6A", bold = true }
+status_visual = { fg = "#7AA2F7", bold = true }
+status_select = { fg = "#BB9AF7", bold = true }
+status_unset = { fg = "#F7768E", bold = true }
+
+# Selection
+selection_normal = { fg = "#C0CAF5", bg = "#283457" }
+selection_visual = { fg = "#C0CAF5", bg = "#2E3C64" }
+selection_search = { fg = "#C0CAF5", bg = "#2D4F67" }
+selection_search_active = { fg = "#C0CAF5", bg = "#394B70" }
+
+# Tasks
+tasks_header = { fg = "#A9B1D6" }
+tasks_footer = { fg = "#A9B1D6" }
+tasks_normal = { fg = "#C0CAF5" }
+tasks_error = { fg = "#F7768E" }
+
+# Which
+which_header = { fg = "#A9B1D6" }
+which_footer = { fg = "#A9B1D6" }
+which_normal = { fg = "#C0CAF5" }
+which_selected = { fg = "#7AA2F7", bold = true }
+
+# Help
+help_header = { fg = "#A9B1D6" }
+help_footer = { fg = "#A9B1D6" }
+help_normal = { fg = "#C0CAF5" }
+help_key = { fg = "#7AA2F7" }
+help_key_active = { fg = "#7DCFFF" }
+help_paragraph = { fg = "#A9B1D6" }
+
+# Input
+input_header = { fg = "#A9B1D6" }
+input_footer = { fg = "#A9B1D6" }
+input_normal = { fg = "#C0CAF5" }
+input_cursor = { fg = "#C0CAF5", reversed = true }
+input_completion = { fg = "#7AA2F7" }
+input_completion_selected = { fg = "#7DCFFF", bg = "#283457" }
+input_search_match = { fg = "#E0AF68" }
+
+# Completion
+completion_header = { fg = "#A9B1D6" }
+completion_footer = { fg = "#A9B1D6" }
+completion_normal = { fg = "#C0CAF5" }
+completion_selected = { fg = "#C0CAF5", bg = "#283457" }
+completion_description = { fg = "#7AA2F7" }
+
+# File panel
+file_panel_header = { fg = "#A9B1D6" }
+file_panel_footer = { fg = "#A9B1D6" }
+file_panel_normal = { fg = "#C0CAF5" }
+file_panel_selected = { fg = "#C0CAF5", bg = "#283457" }
+file_panel_active = { fg = "#7AA2F7", bold = true }
+
+[filetype]
+rules = [
+  # Images
+  { mime = "image/*", fg = "#BB9AF7" },
+  # Videos
+  { mime = "video/*", fg = "#9ECE6A" },
+  # Audio
+  { mime = "audio/*", fg = "#E0AF68" },
+  # Archives
+  { mime = "application/zip", fg = "#7AA2F7" },
+  { mime = "application/gzip", fg = "#7AA2F7" },
+  { mime = "application/x-tar", fg = "#7AA2F7" },
+  { mime = "application/x-bzip", fg = "#7AA2F7" },
+  { mime = "application/x-bzip2", fg = "#7AA2F7" },
+  { mime = "application/x-7z-compressed", fg = "#7AA2F7" },
+  { mime = "application/x-rar", fg = "#7AA2F7" },
+  # Fallback
+  { name = "*/", fg = "#7AA2F7", bold = true },
+  { name = "*", fg = "#C0CAF5" },
+  # Hidden files
+  { name = ".*", fg = "#565F89" },
+  { name = ".*/", fg = "#565F89", bold = true },
+  # PDFs - highlight them specially
+  { mime = "application/pdf", fg = "#F7768E", bold = true },
+]
+
+[icons]
+"Desktop/" = ""
+"Documents/" = ""
+"Downloads/" = ""
+"Pictures/" = ""
+"Music/" = ""
+"Movies/" = ""
+"Videos/" = ""
+"Public/" = ""
+"Library/" = ""
+"Applications/" = ""
+".config/" = ""
+".git/" = ""
+".github/" = ""
+"package.json" = ""
+"node_modules/" = ""
+"Cargo.toml" = ""
+"Cargo.lock" = ""
+"go.mod" = ""
+"go.sum" = ""
+"*.go" = ""
+"*.py" = ""
+"*.rs" = ""
+"*.ts" = ""
+"*.js" = ""
+"*.jsx" = ""
+"*.tsx" = ""
+"*.html" = ""
+"*.css" = ""
+"*.scss" = ""
+"*.sass" = ""
+"*.less" = ""
+"*.json" = ""
+"*.yml" = ""
+"*.yaml" = ""
+"*.toml" = ""
+"*.xml" = ""
+"*.md" = ""
+"*.txt" = ""
+"*.log" = ""
+"*.pdf" = ""
+"*.zip" = ""
+"*.tar" = ""
+"*.gz" = ""
+"*.7z" = ""
+"*.rar" = ""
+"*.jpg" = ""
+"*.jpeg" = ""
+"*.png" = ""
+"*.gif" = ""
+"*.svg" = ""
+"*.mp3" = ""
+"*.flac" = ""
+"*.wav" = ""
+"*.mp4" = ""
+"*.mkv" = ""
+"*.avi" = ""
+"*.exe" = ""
+"*.dll" = ""
+"*.so" = ""
+"*.o" = ""
+"*.c" = ""
+"*.cpp" = ""
+"*.h" = ""
+"*.hpp" = ""
+"*.sh" = ""
+"*.bash" = ""
+"*.zsh" = ""
+"*.fish" = ""
+"*.vim" = ""
+"*.lua" = ""
+"Dockerfile" = ""
+"docker-compose.yml" = ""
+"Makefile" = ""
+"CMakeLists.txt" = ""

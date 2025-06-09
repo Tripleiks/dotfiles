@@ -1,0 +1,208 @@
+[manager]
+prepend_keymap = []
+
+# Navigation
+"<Up>" = "arrow_up"
+"<Down>" = "arrow_down"
+"<Left>" = "arrow_left"
+"<Right>" = "arrow_right"
+"k" = "arrow_up"
+"j" = "arrow_down"
+"h" = "arrow_left"
+"l" = "arrow_right"
+"K" = "arrow_up 5"
+"J" = "arrow_down 5"
+"H" = "arrow_left 5"
+"L" = "arrow_right 5"
+"<C-u>" = "arrow_up 50%"
+"<C-d>" = "arrow_down 50%"
+"<C-b>" = "arrow_up 100%"
+"<C-f>" = "arrow_down 100%"
+"<C-k>" = "arrow_up 5"
+"<C-j>" = "arrow_down 5"
+"<C-h>" = "arrow_left 5"
+"<C-l>" = "arrow_right 5"
+"<Home>" = "arrow_up 99999999"
+"<End>" = "arrow_down 99999999"
+"gg" = "arrow_up 99999999"
+"G" = "arrow_down 99999999"
+
+# Selection
+"<Space>" = "select --state=toggle"
+"v" = "visual_mode"
+"V" = "visual_mode --select=down"
+"<C-a>" = "select_all --state=true"
+"<C-r>" = "select_all --state=toggle"
+
+# Operation
+"o" = "open"
+"O" = "open --interactive"
+"y" = "yank"
+"x" = "yank --cut"
+"p" = "paste"
+"P" = "paste --force"
+"d" = "remove"
+"D" = "remove --permanently"
+"a" = "create"
+"r" = "rename"
+";" = "shell"
+":" = "shell --block"
+"." = "hidden toggle"
+"<C-s>" = "search fd"
+"<C-g>" = "search rg"
+"<C-/>" = "search none"
+"zh" = "hidden toggle"
+"zn" = "sort natural"
+"zs" = "sort size"
+"zm" = "sort mtime"
+"zc" = "sort ctime"
+"za" = "sort atime"
+"ze" = "sort ext"
+"zr" = "sort reverse"
+"zd" = "sort dir_first"
+"f" = "find"
+"F" = "find --previous"
+"<C-n>" = "find_arrow --down"
+"<C-p>" = "find_arrow --up"
+
+# Copy
+"c" = "copy path"
+"C" = "copy name"
+"<C-c>" = "copy"
+
+# Command
+"<Esc>" = "escape"
+"q" = "quit"
+"Q" = "quit --force"
+"w" = "cd ~"
+"W" = "cd /"
+"<C-w>" = "cd -"
+"e" = "cd /etc"
+"<C-o>" = "cd_arrow --left"
+"<C-i>" = "cd_arrow --right"
+"<Tab>" = "tab"
+"<C-Tab>" = "tab --previous"
+"1" = "tab 0"
+"2" = "tab 1"
+"3" = "tab 2"
+"4" = "tab 3"
+"5" = "tab 4"
+"6" = "tab 5"
+"7" = "tab 6"
+"8" = "tab 7"
+"9" = "tab 8"
+"<F5>" = "reload"
+"u" = "undo"
+"U" = "redo"
+
+[tasks]
+prepend_keymap = []
+
+"<Esc>" = "close"
+"<C-c>" = "cancel"
+"<C-z>" = "suspend"
+"q" = "close"
+"k" = "arrow_up"
+"j" = "arrow_down"
+
+[select]
+prepend_keymap = []
+
+"<Esc>" = "close"
+"<C-c>" = "cancel"
+"<C-z>" = "suspend"
+"q" = "close"
+"k" = "arrow_up"
+"j" = "arrow_down"
+"<Enter>" = "submit"
+
+[input]
+prepend_keymap = []
+
+"<Esc>" = "close"
+"<C-c>" = "cancel"
+"<C-z>" = "suspend"
+"<Enter>" = "submit"
+"<C-p>" = "history_up"
+"<C-n>" = "history_down"
+"<Up>" = "up"
+"<Down>" = "down"
+"<Left>" = "left"
+"<Right>" = "right"
+"<C-Left>" = "word_left"
+"<C-Right>" = "word_right"
+"<Home>" = "home"
+"<End>" = "end"
+"<Tab>" = "complete"
+"<BackTab>" = "complete --reverse"
+"<C-u>" = "kill_to_beginning"
+"<C-k>" = "kill_to_end"
+"<C-w>" = "kill_to_previous_word"
+"<C-d>" = "delete"
+"<C-h>" = "backspace"
+
+[help]
+prepend_keymap = []
+
+"<Esc>" = "escape"
+"q" = "quit"
+"<C-c>" = "quit"
+"<C-z>" = "suspend"
+"k" = "arrow_up"
+"j" = "arrow_down"
+"<Up>" = "arrow_up"
+"<Down>" = "arrow_down"
+"<Home>" = "home"
+"<End>" = "end"
+
+[which]
+prepend_keymap = []
+
+"<Esc>" = "escape"
+"q" = "quit"
+"<C-c>" = "quit"
+"<C-z>" = "suspend"
+
+[completion]
+prepend_keymap = []
+
+"<Esc>" = "escape"
+"<C-c>" = "quit"
+"<C-z>" = "suspend"
+"<Tab>" = "down"
+"<BackTab>" = "up"
+"k" = "up"
+"j" = "down"
+"<Up>" = "up"
+"<Down>" = "down"
+"<Enter>" = "submit"
+
+[file-panel]
+prepend_keymap = []
+
+"<Esc>" = "escape"
+"<C-c>" = "quit"
+"<C-z>" = "suspend"
+"k" = "up"
+"j" = "down"
+"<Up>" = "up"
+"<Down>" = "down"
+"<Enter>" = "submit"
+
+[visual]
+prepend_keymap = []
+
+"<Esc>" = "escape"
+"<C-c>" = "quit"
+"<C-z>" = "suspend"
+"k" = "up"
+"j" = "down"
+"<Up>" = "up"
+"<Down>" = "down"
+"<Home>" = "home"
+"<End>" = "end"
+"v" = "visual_mode"
+"V" = "visual_mode --select=down"
+"<Space>" = "select --state=toggle"
+"<C-a>" = "select_all --state=true"
+"<C-r>" = "select_all --state=toggle"
