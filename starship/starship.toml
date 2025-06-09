@@ -3,7 +3,7 @@ add_newline = true
 continuation_prompt = "▶ "
 
 # First line left side with programming language info on the right
-format = "$os$username$hostname$directory$fill$nodejs$python$java$dotnet$golang$rust$dart$angular$ruby$julia$aws$kubernetes$battery$time$cmd_duration$line_break$git_branch$git_status$character"
+format = "$os$username$hostname$directory$fill$nodejs$python$java$dotnet$golang$rust$dart$ruby$julia$aws$kubernetes$battery$time$cmd_duration$line_break$git_branch$git_status$character"
 
 # Configure individual components
 [character]
@@ -84,10 +84,7 @@ format = "[$symbol($version )]($style)"
 symbol = "󰴺 "
 style = "bold blue"
 
-[angular]
-format = "[$symbol($version )]($style)"
-symbol = "󰚲 "
-style = "bold red"
+# Angular section removed - not supported by Starship
 
 [ruby]
 format = "[$symbol($version )]($style)"
@@ -105,7 +102,7 @@ symbol = "󰸏 "
 style = "bold yellow"
 
 [kubernetes]
-format = "[$symbol$context( \($namespace\))]($style)"
+format = "[$symbol$context( ($namespace))]($style)"
 symbol = "☸ "
 style = "bold blue"
 
