@@ -147,10 +147,10 @@ function Install-ModuleIfNeeded {
         return $true
     } catch {
         if ($Required) {
-            Write-ColorMessage "❌ Failed to install/update $Name" $colors.Error
+            Write-ColorMessage "❌ Failed to install/update $Name: $($_.Exception.Message)" $colors.Error
             return $false
         } else {
-            Write-ColorMessage "⚠️ Failed to install/update optional module $Name" $colors.Warning
+            Write-ColorMessage "⚠️ Failed to install/update optional module $Name: $($_.Exception.Message)" $colors.Warning
             return $true
         }
     }

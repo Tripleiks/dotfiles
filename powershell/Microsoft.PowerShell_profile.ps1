@@ -60,7 +60,17 @@ function Test-Command {
 $DOTFILES_DIR = "$HOME/coding/github/dotfiles"
 $SCRIPTS_DIR = "$DOTFILES_DIR/powershell/Scripts"
 $MODULES_DIR = "$DOTFILES_DIR/powershell/Modules"
-$THEME_DIR = "$HOME/.config/oh-my-posh/themes"
+# Starship config path - ensure it's correctly set
+$env:STARSHIP_CONFIG = "$HOME/.config/starship.toml"
+
+# Verify the config file exists, if not copy from dotfiles
+if (-not (Test-Path $env:STARSHIP_CONFIG)) {
+    $starshipConfigDir = Split-Path -Parent $env:STARSHIP_CONFIG
+    if (-not (Test-Path $starshipConfigDir)) {
+        New-Item -Path $starshipConfigDir -ItemType Directory -Force | Out-Null
+    }
+    Copy-Item "$DOTFILES_DIR/starship/starship.toml" -Destination $env:STARSHIP_CONFIG -Force
+}
 
 # Note: Using built-in $IsWindows, $IsMacOS, and $IsLinux automatic variables
 
@@ -85,23 +95,45 @@ if ($IsMacOS) {
     
     # Define full paths for common CLI tools to ensure they work in all environments
     $cliToolPaths = @{
+        # File management and navigation
         "eza" = "/opt/homebrew/bin/eza"
         "bat" = "/opt/homebrew/bin/bat"
         "rg" = "/opt/homebrew/bin/rg"
         "fd" = "/opt/homebrew/bin/fd"
         "jq" = "/usr/bin/jq"
         "delta" = "/opt/homebrew/bin/delta"
-        "age" = "/opt/homebrew/bin/age"
-        "tldr" = "/opt/homebrew/bin/tldr"
-        "asciinema" = "/opt/homebrew/bin/asciinema"
-        "lazygit" = "/opt/homebrew/bin/lazygit"
+        "ranger" = "/opt/homebrew/bin/ranger"
+        "fzf" = "/opt/homebrew/bin/fzf"
+        "yazi" = "/opt/homebrew/bin/yazi"
+        "zoxide" = "/opt/homebrew/bin/zoxide"
+        
+        # System monitoring and utilities
+        "btop" = "/opt/homebrew/bin/btop"
         "gping" = "/opt/homebrew/bin/gping"
         "doggo" = "/opt/homebrew/bin/doggo"
         "bandwhich" = "/opt/homebrew/bin/bandwhich"
         "duf" = "/opt/homebrew/bin/duf"
-        "ranger" = "/opt/homebrew/bin/ranger"
         "ncdu" = "/opt/homebrew/bin/ncdu"
-        "fzf" = "/opt/homebrew/bin/fzf"
+        "neofetch" = "/opt/homebrew/bin/neofetch"
+        "fastfetch" = "/opt/homebrew/bin/fastfetch"
+        "cmatrix" = "/opt/homebrew/bin/cmatrix"
+        "figlet" = "/opt/homebrew/bin/figlet"
+        
+        # Development tools
+        "age" = "/opt/homebrew/bin/age"
+        "tldr" = "/opt/homebrew/bin/tldr"
+        "asciinema" = "/opt/homebrew/bin/asciinema"
+        "lazygit" = "/opt/homebrew/bin/lazygit"
+        "thefuck" = "/opt/homebrew/bin/thefuck"
+        "atuin" = "/opt/homebrew/bin/atuin"
+        "mcfly" = "/opt/homebrew/bin/mcfly"
+        "starship" = "/opt/homebrew/bin/starship"
+        "go" = "/opt/homebrew/bin/go"
+        "node" = "/opt/homebrew/bin/node"
+        "npm" = "/opt/homebrew/bin/npm"
+        "python3" = "/opt/homebrew/bin/python3"
+        "pip3" = "/opt/homebrew/bin/pip3"
+        "php" = "/opt/homebrew/bin/php"
     }
     
     # Function to safely use CLI tools with full paths
@@ -114,11 +146,31 @@ if ($IsMacOS) {
             $Arguments
         )
         
-        if ($cliToolPaths.ContainsKey($Tool) -and (Test-Path $cliToolPaths[$Tool])) {
-            & $cliToolPaths[$Tool] @Arguments
-        } else {
-            # Fallback to regular command if full path doesn't exist
+        if ($cliToolPaths.ContainsKey($Tool)) {
+            if (Test-Path $cliToolPaths[$Tool]) {
+                & $cliToolPaths[$Tool] @Arguments
+                return $true
+            } else {
+                # Try to find the tool in Homebrew paths
+                foreach ($path in $homebrewPaths) {
+                    $fullPath = Join-Path $path $Tool
+                    if (Test-Path $fullPath) {
+                        # Update the path in our dictionary for future use
+                        $cliToolPaths[$Tool] = $fullPath
+                        & $fullPath @Arguments
+                        return $true
+                    }
+                }
+            }
+        }
+        
+        # Fallback to regular command if full path doesn't exist
+        if (Test-Command $Tool) {
             & $Tool @Arguments
+            return $true
+        } else {
+            Write-ColorMessage "[WARNING] Tool '$Tool' not found in PATH" $colors.Warning
+            return $false
         }
     }
     
@@ -280,7 +332,7 @@ function Initialize-PowerShellEnvironment {
 $requiredModules = @(
     @{ Name = "PSReadLine"; MinVersion = "2.2.0" },
     @{ Name = "posh-git"; MinVersion = "1.0.0" },
-    @{ Name = "oh-my-posh"; MinVersion = "7.0.0" },
+    # Removed oh-my-posh from required modules
     @{ Name = "z"; MinVersion = "1.1.13" },
     @{ Name = "PSFzf"; MinVersion = "2.0.0" }
 )
@@ -328,31 +380,54 @@ if (Get-Module -Name PSReadLine) {
 # Note: We're using eza's built-in icons instead of Terminal-Icons for a more consistent experience
 Write-ColorMessage "[INFO] Using eza's built-in icons for file listings." $colors.Info
 
-# Configure oh-my-posh (using the executable instead of the module)
-# Use full path to oh-my-posh to ensure it works in all environments (including Warp)
-$ohMyPoshPath = "/opt/homebrew/bin/oh-my-posh"
+# Configure Starship prompt
+$starshipPath = "/opt/homebrew/bin/starship"
 
-if (Test-Path $ohMyPoshPath) {
-    # Set the oh-my-posh theme
-    if (Test-Path "$THEME_DIR/my-quick-term.omp.json") {
-        & $ohMyPoshPath init pwsh --config "$THEME_DIR/my-quick-term.omp.json" | Invoke-Expression
-        Write-ColorMessage "[INFO] Oh My Posh initialized with custom theme: $THEME_DIR/my-quick-term.omp.json" $colors.Info
-    } else {
-        & $ohMyPoshPath init pwsh --config "$env:POSH_THEMES_PATH/paradox.omp.json" | Invoke-Expression
-        Write-ColorMessage "[INFO] Oh My Posh initialized with default theme: paradox" $colors.Info
+# Function to check if a Nerd Font is likely being used
+function Test-NerdFont {
+    # Test character that should only render properly with a Nerd Font
+    $nerdFontTestChar = ""
+    Write-Host "Testing if your terminal supports Nerd Font symbols: $nerdFontTestChar" -NoNewline
+    
+    # Prompt user to confirm if they can see the symbol
+    Write-Host " - If you can see a folder icon above, press Enter. If not, type 'no': " -NoNewline -ForegroundColor Yellow
+    $response = Read-Host
+    
+    if ($response -eq "no") {
+        return $false
     }
-} elseif (Test-Command "oh-my-posh") {
-    # Fallback to PATH if the specific path doesn't exist
-    # Set the oh-my-posh theme
-    if (Test-Path "$THEME_DIR/my-quick-term.omp.json") {
-        oh-my-posh init pwsh --config "$THEME_DIR/my-quick-term.omp.json" | Invoke-Expression
-        Write-ColorMessage "[INFO] Oh My Posh initialized with custom theme: $THEME_DIR/my-quick-term.omp.json" $colors.Info
-    } else {
-        oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH/paradox.omp.json" | Invoke-Expression
-        Write-ColorMessage "[INFO] Oh My Posh initialized with default theme: paradox" $colors.Info
+    return $true
+}
+
+if (Test-Path $starshipPath) {
+    # Use full path to ensure it works in all environments (including Warp)
+    & $starshipPath init powershell | Invoke-Expression
+    Write-ColorMessage "[INFO] Starship prompt initialized with config: $env:STARSHIP_CONFIG" $colors.Info
+    
+    # Check if Nerd Font is being used (only on first run in a session)
+    $markerFile = "$HOME/.config/powershell/.nerd_font_checked"
+    if (-not (Test-Path $markerFile)) {
+        $nerdFontEnabled = Test-NerdFont
+        if (-not $nerdFontEnabled) {
+            Write-ColorMessage "[WARNING] Your terminal doesn't appear to be using a Nerd Font. Starship's symbols may not display correctly." $colors.Warning
+            Write-ColorMessage "[TIP] Install a Nerd Font from https://www.nerdfonts.com and configure your terminal to use it." $colors.Info
+        } else {
+            Write-ColorMessage "[INFO] Nerd Font detected. Starship symbols should display correctly." $colors.Success
+        }
+        # Create marker file so we don't check on every new PowerShell instance
+        try {
+            New-Item -Path $markerFile -ItemType File -Force -ErrorAction Stop | Out-Null
+        } catch {
+            Write-ColorMessage "[NOTE] Could not create Nerd Font check marker file: $_" $colors.Warning
+        }
     }
+} elseif (Test-Command "starship") {
+    # Use command if available
+    Invoke-Expression (&starship init powershell)
+    Write-ColorMessage "[INFO] Starship prompt initialized with config: $env:STARSHIP_CONFIG" $colors.Info
 } else {
-    Write-ColorMessage "[WARNING] oh-my-posh executable not found. Install it with: brew install jandedobbeleer/oh-my-posh/oh-my-posh" $colors.Warning
+    # Prompt if starship is not installed
+    Write-ColorMessage "[WARNING] Starship executable not found. Install it with: brew install starship" $colors.Warning
 }
 
 # Configure z (directory jumper) if available
