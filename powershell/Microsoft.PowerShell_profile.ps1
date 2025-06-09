@@ -374,11 +374,17 @@ if (Get-Module -Name PSReadLine) {
         Comment = 'DarkGray'
     }
     
-    Write-ColorMessage "[INFO] PSReadLine loaded and configured with custom colors." $colors.Info
+    # Only show PSReadLine message on first load
+    if (-not $global:ProfileLoadCount -or $global:ProfileLoadCount -eq 1) {
+        Write-ColorMessage "[INFO] PSReadLine loaded and configured with custom colors." $colors.Info
+    }
 }
 
 # Note: We're using eza's built-in icons instead of Terminal-Icons for a more consistent experience
-Write-ColorMessage "[INFO] Using eza's built-in icons for file listings." $colors.Info
+# Only show icons message on first load
+if (-not $global:ProfileLoadCount -or $global:ProfileLoadCount -eq 1) {
+    Write-ColorMessage "[INFO] Using eza's built-in icons for file listings." $colors.Info
+}
 
 # Configure Starship prompt
 $starshipPath = "/opt/homebrew/bin/starship"
@@ -402,7 +408,11 @@ function Test-NerdFont {
 if (Test-Path $starshipPath) {
     # Use full path to ensure it works in all environments (including Warp)
     & $starshipPath init powershell | Invoke-Expression
-    Write-ColorMessage "[INFO] Starship prompt initialized with config: $env:STARSHIP_CONFIG" $colors.Info
+    
+    # Only show initialization message on first load
+    if (-not $global:ProfileLoadCount -or $global:ProfileLoadCount -eq 1) {
+        Write-ColorMessage "[INFO] Starship prompt initialized with config: $env:STARSHIP_CONFIG" $colors.Info
+    }
     
     # Check if Nerd Font is being used (only on first run in a session)
     $markerFile = "$HOME/.config/powershell/.nerd_font_checked"
@@ -424,7 +434,11 @@ if (Test-Path $starshipPath) {
 } elseif (Test-Command "starship") {
     # Use command if available
     Invoke-Expression (&starship init powershell)
-    Write-ColorMessage "[INFO] Starship prompt initialized with config: $env:STARSHIP_CONFIG" $colors.Info
+    
+    # Only show initialization message on first load
+    if (-not $global:ProfileLoadCount -or $global:ProfileLoadCount -eq 1) {
+        Write-ColorMessage "[INFO] Starship prompt initialized with config: $env:STARSHIP_CONFIG" $colors.Info
+    }
 } else {
     # Prompt if starship is not installed
     Write-ColorMessage "[WARNING] Starship executable not found. Install it with: brew install starship" $colors.Warning
@@ -546,17 +560,20 @@ if (Test-Command "eza") {
     Set-Alias -Name lss -Value Get-ChildItemEzaSize
     Set-Alias -Name lsm -Value Get-ChildItemEzaModified
     
-    Write-ColorMessage "[INFO] Eza configured with icons support and common aliases:" $colors.Info
-    Write-ColorMessage "  ez    - Basic eza with icons" $colors.Info
-    Write-ColorMessage "  ll    - List in long format" $colors.Info
-    Write-ColorMessage "  la    - List all files (including hidden)" $colors.Info
-    Write-ColorMessage "  lt    - List as tree" $colors.Info
-    Write-ColorMessage "  llt   - List as tree in long format" $colors.Info
-    Write-ColorMessage "  lg    - List in grid format" $colors.Info
-    Write-ColorMessage "  lsg   - List with git status" $colors.Info
-    Write-ColorMessage "  llg   - List in long format with git status" $colors.Info
-    Write-ColorMessage "  lss   - List sorted by size" $colors.Info
-    Write-ColorMessage "  lsm   - List sorted by modified time" $colors.Info
+    # Only show Eza configuration message on first load
+    if (-not $global:ProfileLoadCount -or $global:ProfileLoadCount -eq 1) {
+        Write-ColorMessage "[INFO] Eza configured with icons support and common aliases:" $colors.Info
+        Write-ColorMessage "  ez    - Basic eza with icons" $colors.Info
+        Write-ColorMessage "  ll    - List in long format" $colors.Info
+        Write-ColorMessage "  la    - List all files (including hidden)" $colors.Info
+        Write-ColorMessage "  lt    - List as tree" $colors.Info
+        Write-ColorMessage "  llt   - List as tree in long format" $colors.Info
+        Write-ColorMessage "  lg    - List in grid format" $colors.Info
+        Write-ColorMessage "  lsg   - List with git status" $colors.Info
+        Write-ColorMessage "  llg   - List in long format with git status" $colors.Info
+        Write-ColorMessage "  lss   - List sorted by size" $colors.Info
+        Write-ColorMessage "  lsm   - List sorted by modified time" $colors.Info
+    }
 }
 
 # Configure bat integration if available
@@ -1350,14 +1367,18 @@ Set-Alias -Name updateall -Value Update-AllPackages
 #endregion
 
 #region Initialization
-# Display welcome message
-$greeting = Get-Greeting
-Write-Host "`n$greeting $env:USER ⚡`n" -ForegroundColor $colors.Emphasis
+# Display welcome message - only on first load
+if (-not $global:ProfileLoadCount -or $global:ProfileLoadCount -eq 1) {
+    $greeting = Get-Greeting
+    Write-Host "`n$greeting $env:USER ⚡`n" -ForegroundColor $colors.Emphasis
+}
 
 # Initialize PowerShell environment (install required modules and CLI tools)
 # Comment out the next line if you don't want to check for dependencies on every startup
 # Initialize-PowerShellEnvironment -Quiet
 
-# Final message
-Write-ColorMessage "[INFO] PowerShell profile loaded successfully." $colors.Info
+# Final message - only show on first load
+if (-not $global:ProfileLoadCount -or $global:ProfileLoadCount -eq 1) {
+    Write-ColorMessage "[INFO] PowerShell profile loaded successfully." $colors.Info
+}
 #endregion
