@@ -13,18 +13,18 @@ vimcmd_symbol = "[╰─❮](bold yellow)"
 
 [username]
 style = "bold yellow"
-format = "[╭─[$user]($style)"
+format = "╭─[$user]($style)"
 show_always = true
 
 [hostname]
 style = "bold green"
-format = "[@$hostname]─](bold green)"
+format = "[@$hostname](bold green)─"
 ssh_only = false
 ssh_symbol = "🌐 "
 
 [directory]
 style = "bold white"
-format = "[[$path]](white) "
+format = "[$path](white) "
 truncation_length = 3
 truncation_symbol = "…/"
 
@@ -33,11 +33,11 @@ symbol = " "
 
 [git_branch]
 style = "bold cyan"
-format = "[[$symbol$branch]](bold cyan) "
+format = "[$symbol$branch](bold cyan) "
 symbol = "󰘬 "
 
 [git_status]
-format = "([[$all_status$ahead_behind]](bold white)) "
+format = "([$all_status$ahead_behind](bold white)) "
 conflicted = "[󰞇](bold red)"
 ahead = "[⇡${count}](bold green)"
 behind = "[⇣${count}](bold red)"
@@ -112,7 +112,7 @@ charging_symbol = "󰂄 "
 discharging_symbol = "󰂃 "
 unknown_symbol = "󰂑 "
 empty_symbol = "󰂎 "
-format = "[[$symbol$percentage]](bold $style)─"
+format = "[$symbol$percentage](bold $style)─"
 [[battery.display]]
 threshold = 20
 style = "red"
@@ -124,12 +124,12 @@ threshold = 100
 style = "green"
 
 [time]
-format = "[[$time]](bold cyan) "
+format = "[$time](bold cyan) "
 time_format = "%H:%M"
 disabled = false
 
 [cmd_duration]
-format = "took [[$duration]](bold yellow) "
+format = "took [$duration](bold yellow) "
 min_time = 2000
 
 [os]
