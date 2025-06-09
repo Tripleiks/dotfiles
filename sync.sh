@@ -74,6 +74,29 @@ update_dotfiles() {
   cp -f "$HOME/.config/powershell/Microsoft.PowerShell_profile.ps1" "$DOTFILES_DIR/powershell/Microsoft.PowerShell_profile.ps1" 2>/dev/null || true
   cp -rf "$HOME/.config/powershell/Scripts/" "$DOTFILES_DIR/powershell/" 2>/dev/null || true
   
+  # Update Yazi configuration
+  mkdir -p "$DOTFILES_DIR/.config/yazi/plugins"
+  cp -f "$HOME/.config/yazi/yazi.toml" "$DOTFILES_DIR/.config/yazi/" 2>/dev/null || true
+  cp -f "$HOME/.config/yazi/keymap.toml" "$DOTFILES_DIR/.config/yazi/" 2>/dev/null || true
+  cp -f "$HOME/.config/yazi/theme.toml" "$DOTFILES_DIR/.config/yazi/" 2>/dev/null || true
+  cp -rf "$HOME/.config/yazi/plugins/" "$DOTFILES_DIR/.config/yazi/" 2>/dev/null || true
+  
+  # Update btop configuration
+  mkdir -p "$DOTFILES_DIR/btop"
+  cp -f "$HOME/.config/btop/btop.conf" "$DOTFILES_DIR/btop/" 2>/dev/null || true
+  
+  # Update neofetch configuration
+  mkdir -p "$DOTFILES_DIR/neofetch"
+  cp -f "$HOME/.config/neofetch/config.conf" "$DOTFILES_DIR/neofetch/" 2>/dev/null || true
+  
+  # Update thefuck configuration
+  mkdir -p "$DOTFILES_DIR/thefuck"
+  cp -f "$HOME/.config/thefuck/settings.py" "$DOTFILES_DIR/thefuck/" 2>/dev/null || true
+  
+  # Update Starship configuration
+  mkdir -p "$DOTFILES_DIR/starship"
+  cp -f "$HOME/.config/starship.toml" "$DOTFILES_DIR/starship/" 2>/dev/null || true
+  
   # Update Brewfile
   if command -v brew >/dev/null 2>&1; then
     print_message "Updating Brewfile..." "$YELLOW"

@@ -318,6 +318,29 @@ link_dotfiles() {
   create_symlink "$DOTFILES_DIR/powershell/Scripts/Install-CliTools.ps1" "$HOME/.config/powershell/Scripts/Install-CliTools.ps1"
   chmod +x "$HOME/.config/powershell/Scripts/Install-RequiredModules.ps1" "$HOME/.config/powershell/Scripts/Install-CliTools.ps1"
   
+  # Yazi configuration
+  mkdir -p "$HOME/.config/yazi/plugins"
+  create_symlink "$DOTFILES_DIR/.config/yazi/yazi.toml" "$HOME/.config/yazi/yazi.toml"
+  create_symlink "$DOTFILES_DIR/.config/yazi/keymap.toml" "$HOME/.config/yazi/keymap.toml"
+  create_symlink "$DOTFILES_DIR/.config/yazi/theme.toml" "$HOME/.config/yazi/theme.toml"
+  create_symlink "$DOTFILES_DIR/.config/yazi/plugins/preview.lua" "$HOME/.config/yazi/plugins/preview.lua"
+  
+  # btop configuration
+  mkdir -p "$HOME/.config/btop"
+  create_symlink "$DOTFILES_DIR/btop/btop.conf" "$HOME/.config/btop/btop.conf"
+  
+  # neofetch configuration
+  mkdir -p "$HOME/.config/neofetch"
+  create_symlink "$DOTFILES_DIR/neofetch/config.conf" "$HOME/.config/neofetch/config.conf"
+  
+  # thefuck configuration
+  mkdir -p "$HOME/.config/thefuck"
+  create_symlink "$DOTFILES_DIR/thefuck/settings.py" "$HOME/.config/thefuck/settings.py"
+  
+  # Starship configuration
+  mkdir -p "$HOME/.config"
+  create_symlink "$DOTFILES_DIR/starship/starship.toml" "$HOME/.config/starship.toml"
+  
   print_success "Dotfiles linked"
 }
 

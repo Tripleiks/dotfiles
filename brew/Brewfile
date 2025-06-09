@@ -32,7 +32,11 @@ brew "thefuck"
 brew "tlrc"
 brew "wireguard-tools"
 brew "yazi"
+brew "poppler" # Required for PDF preview in Yazi
 brew "zoxide"
+brew "cmatrix" # Terminal matrix effect
+brew "figlet" # ASCII art text generator
+brew "go" # Go programming language
 brew "jandedobbeleer/oh-my-posh/oh-my-posh"
 cask "1password-cli"
 cask "font-0xproto-nerd-font"
