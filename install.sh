@@ -314,8 +314,10 @@ link_dotfiles() {
   # PowerShell configuration
   mkdir -p "$HOME/.config/powershell/Scripts"
   create_symlink "$DOTFILES_DIR/powershell/Microsoft.PowerShell_profile.ps1" "$HOME/.config/powershell/Microsoft.PowerShell_profile.ps1"
+  create_symlink "$DOTFILES_DIR/powershell/vscode/Microsoft.VSCode_profile.ps1" "$HOME/.config/powershell/Microsoft.VSCode_profile.ps1"
   create_symlink "$DOTFILES_DIR/powershell/Scripts/Install-RequiredModules.ps1" "$HOME/.config/powershell/Scripts/Install-RequiredModules.ps1"
   create_symlink "$DOTFILES_DIR/powershell/Scripts/Install-CliTools.ps1" "$HOME/.config/powershell/Scripts/Install-CliTools.ps1"
+  create_symlink "$DOTFILES_DIR/reload-profile.ps1" "$HOME/.config/powershell/reload-profile.ps1"
   chmod +x "$HOME/.config/powershell/Scripts/Install-RequiredModules.ps1" "$HOME/.config/powershell/Scripts/Install-CliTools.ps1"
   
   # Yazi configuration
