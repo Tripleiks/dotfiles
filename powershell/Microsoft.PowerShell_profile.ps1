@@ -230,6 +230,34 @@ function Initialize-PowerShellEnvironment {
     else {
         Write-ColorMessage "⚠️ CLI tools installation script not found: $cliToolsScript" $colors.Warning
     }
+    
+    # Check and install M365 and Azure modules
+    $m365AzureScript = "$SCRIPTS_DIR/Install-M365AzureModules.ps1"
+    if (Test-Path $m365AzureScript) {
+        try {
+            & $m365AzureScript -Force:$Force -Quiet:$Quiet
+        }
+        catch {
+            Write-ColorMessage "❌ Error installing M365 and Azure modules: $_" $colors.Error
+        }
+    }
+    else {
+        Write-ColorMessage "⚠️ M365 and Azure modules installation script not found: $m365AzureScript" $colors.Warning
+    }
+    
+    # Check and install additional modules
+    $additionalModulesScript = "$SCRIPTS_DIR/Install-AdditionalModules.ps1"
+    if (Test-Path $additionalModulesScript) {
+        try {
+            & $additionalModulesScript -Force:$Force -Quiet:$Quiet
+        }
+        catch {
+            Write-ColorMessage "❌ Error installing additional modules: $_" $colors.Error
+        }
+    }
+    else {
+        Write-ColorMessage "⚠️ Additional modules installation script not found: $additionalModulesScript" $colors.Warning
+    }
 }
 #endregion
 
@@ -959,8 +987,225 @@ function Update-AllModules {
     }
 }
 
+# Function to update M365 and Azure modules
+function Update-M365AzureModules {
+    param(
+        [switch]$Force
+    )
+    
+    $m365AzureScript = "$SCRIPTS_DIR/Install-M365AzureModules.ps1"
+    if (Test-Path $m365AzureScript) {
+        & $m365AzureScript -Force:$Force
+    } else {
+        Write-ColorMessage "⚠️ M365 and Azure modules installation script not found: $m365AzureScript" $colors.Warning
+    }
+}
+
+function Update-AdditionalModules {
+    param(
+        [switch]$Force
+    )
+    
+    $additionalModulesScript = "$SCRIPTS_DIR/Install-AdditionalModules.ps1"
+    if (Test-Path $additionalModulesScript) {
+        & $additionalModulesScript -Force:$Force
+    } else {
+        Write-ColorMessage "⚠️ Additional modules installation script not found: $additionalModulesScript" $colors.Warning
+    }
+}
+
 # Set alias for updating modules
 Set-Alias -Name updatemodules -Value Update-AllModules
+Set-Alias -Name updatem365 -Value Update-M365AzureModules
+Set-Alias -Name updateaddons -Value Update-AdditionalModules
+
+#region Microsoft 365 and Azure Functions
+# Microsoft 365 and Azure connection functions
+function Connect-M365 {
+    param(
+        [Parameter(Mandatory=$false)]
+        [string]$TenantId,
+        
+        [Parameter(Mandatory=$false)]
+        [switch]$MFA,
+        
+        [Parameter(Mandatory=$false)]
+        [switch]$Exchange,
+        
+        [Parameter(Mandatory=$false)]
+        [switch]$SharePoint,
+        
+        [Parameter(Mandatory=$false)]
+        [switch]$Teams,
+        
+        [Parameter(Mandatory=$false)]
+        [switch]$Graph
+    )
+    
+    # Check if required modules are installed
+    $requiredModules = @()
+    
+    if ($Exchange -or (-not ($SharePoint -or $Teams -or $Graph))) {
+        $requiredModules += "ExchangeOnlineManagement"
+    }
+    
+    if ($SharePoint) {
+        $requiredModules += "PnP.PowerShell"
+    }
+    
+    if ($Teams) {
+        $requiredModules += "MicrosoftTeams"
+    }
+    
+    if ($Graph -or (-not ($Exchange -or $SharePoint -or $Teams))) {
+        $requiredModules += "Microsoft.Graph"
+    }
+    
+    $missingModules = @()
+    foreach ($module in $requiredModules) {
+        if (-not (Get-Module -Name $module -ListAvailable)) {
+            $missingModules += $module
+        }
+    }
+    
+    if ($missingModules.Count -gt 0) {
+        Write-ColorMessage "❌ Missing required modules: $($missingModules -join ', ')" $colors.Error
+        Write-ColorMessage "Run 'Update-M365AzureModules' to install the required modules" $colors.Warning
+        return
+    }
+    
+    # Connect to services
+    try {
+        if ($Exchange -or (-not ($SharePoint -or $Teams -or $Graph))) {
+            Write-ColorMessage "Connecting to Exchange Online..." $colors.Info
+            if ($TenantId) {
+                Connect-ExchangeOnline -ManagedIdentity:$MFA -Organization "$TenantId.onmicrosoft.com" -ShowBanner:$false
+            } else {
+                Connect-ExchangeOnline -ManagedIdentity:$MFA -ShowBanner:$false
+            }
+            Write-ColorMessage "✅ Connected to Exchange Online" $colors.Success
+        }
+        
+        if ($SharePoint) {
+            Write-ColorMessage "Connecting to SharePoint Online..." $colors.Info
+            if ($TenantId) {
+                Connect-PnPOnline -Url "https://$TenantId.sharepoint.com" -Interactive
+            } else {
+                Connect-PnPOnline -Interactive
+            }
+            Write-ColorMessage "✅ Connected to SharePoint Online" $colors.Success
+        }
+        
+        if ($Teams) {
+            Write-ColorMessage "Connecting to Microsoft Teams..." $colors.Info
+            Connect-MicrosoftTeams
+            Write-ColorMessage "✅ Connected to Microsoft Teams" $colors.Success
+        }
+        
+        if ($Graph -or (-not ($Exchange -or $SharePoint -or $Teams))) {
+            Write-ColorMessage "Connecting to Microsoft Graph..." $colors.Info
+            Connect-MgGraph -Scopes "User.Read.All", "Group.ReadWrite.All", "Directory.ReadWrite.All"
+            Write-ColorMessage "✅ Connected to Microsoft Graph" $colors.Success
+        }
+        
+        Write-ColorMessage "✅ Successfully connected to Microsoft 365 services" $colors.Success
+    } catch {
+        Write-ColorMessage "❌ Error connecting to Microsoft 365: $($_.Exception.Message)" $colors.Error
+    }
+}
+
+function Connect-AzureCloud {
+    param(
+        [Parameter(Mandatory=$false)]
+        [string]$SubscriptionId,
+        
+        [Parameter(Mandatory=$false)]
+        [string]$TenantId
+    )
+    
+    # Check if required modules are installed
+    if (-not (Get-Module -Name Az.Accounts -ListAvailable)) {
+        Write-ColorMessage "❌ Missing required module: Az.Accounts" $colors.Error
+        Write-ColorMessage "Run 'Update-M365AzureModules' to install the required modules" $colors.Warning
+        return
+    }
+    
+    try {
+        # Connect to Azure
+        Write-ColorMessage "Connecting to Azure..." $colors.Info
+        
+        $params = @{}
+        if ($TenantId) { $params.TenantId = $TenantId }
+        
+        Connect-AzAccount @params
+        
+        # Set subscription if specified
+        if ($SubscriptionId) {
+            Write-ColorMessage "Setting subscription to $SubscriptionId..." $colors.Info
+            Set-AzContext -Subscription $SubscriptionId
+        }
+        
+        # Show current context
+        $context = Get-AzContext
+        Write-ColorMessage "✅ Connected to Azure" $colors.Success
+        Write-ColorMessage "   Tenant: $($context.Tenant.Id)" $colors.Info
+        Write-ColorMessage "   Subscription: $($context.Subscription.Name) ($($context.Subscription.Id))" $colors.Info
+        Write-ColorMessage "   Account: $($context.Account.Id)" $colors.Info
+    } catch {
+        Write-ColorMessage "❌ Error connecting to Azure: $($_.Exception.Message)" $colors.Error
+    }
+}
+
+function Disconnect-M365 {
+    try {
+        # Disconnect from Exchange Online
+        if (Get-Command Disconnect-ExchangeOnline -ErrorAction SilentlyContinue) {
+            Disconnect-ExchangeOnline -Confirm:$false
+            Write-ColorMessage "✅ Disconnected from Exchange Online" $colors.Success
+        }
+        
+        # Disconnect from SharePoint Online
+        if (Get-Command Disconnect-PnPOnline -ErrorAction SilentlyContinue) {
+            Disconnect-PnPOnline
+            Write-ColorMessage "✅ Disconnected from SharePoint Online" $colors.Success
+        }
+        
+        # Disconnect from Microsoft Teams
+        if (Get-Command Disconnect-MicrosoftTeams -ErrorAction SilentlyContinue) {
+            Disconnect-MicrosoftTeams
+            Write-ColorMessage "✅ Disconnected from Microsoft Teams" $colors.Success
+        }
+        
+        # Disconnect from Microsoft Graph
+        if (Get-Command Disconnect-MgGraph -ErrorAction SilentlyContinue) {
+            Disconnect-MgGraph
+            Write-ColorMessage "✅ Disconnected from Microsoft Graph" $colors.Success
+        }
+        
+        Write-ColorMessage "✅ Successfully disconnected from all Microsoft 365 services" $colors.Success
+    } catch {
+        Write-ColorMessage "❌ Error disconnecting from Microsoft 365: $($_.Exception.Message)" $colors.Error
+    }
+}
+
+function Disconnect-AzureCloud {
+    try {
+        # Disconnect from Azure
+        if (Get-Command Disconnect-AzAccount -ErrorAction SilentlyContinue) {
+            Disconnect-AzAccount
+            Write-ColorMessage "✅ Disconnected from Azure" $colors.Success
+        }
+    } catch {
+        Write-ColorMessage "❌ Error disconnecting from Azure: $($_.Exception.Message)" $colors.Error
+    }
+}
+
+# Set aliases for M365 and Azure functions
+Set-Alias -Name m365 -Value Connect-M365
+Set-Alias -Name azure -Value Connect-AzureCloud
+Set-Alias -Name m365exit -Value Disconnect-M365
+Set-Alias -Name azureexit -Value Disconnect-AzureCloud
+#endregion
 
 # Function to update Homebrew packages
 function Update-HomebrewPackages {

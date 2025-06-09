@@ -1,0 +1,10 @@
+#!/bin/bash
+# Wrapper script for PowerShell azure command (Connect to Azure)
+
+# Get the directory of this script
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+DOTFILES_DIR="$(dirname "$SCRIPT_DIR")"
+PWSH_SCRIPTS_DIR="$DOTFILES_DIR/powershell/Scripts"
+
+# Run the PowerShell command
+pwsh -NoProfile -Command ". '$HOME/.config/powershell/Microsoft.PowerShell_profile.ps1'; azure $@"
