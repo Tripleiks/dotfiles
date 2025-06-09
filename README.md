@@ -7,7 +7,7 @@ A personal dotfiles management system for zsh and PowerShell configuration, CLI 
 - Centralized management of zsh and PowerShell configuration files
 - Automatic installation of CLI tools via Homebrew
 - Nerd Fonts installation for proper icon rendering
-- Oh My Posh with custom theme for beautiful prompts
+- Starship prompt with custom theme for beautiful cross-shell prompts
 - zsh-git-prompt for enhanced Git status information
 - Ultimate PowerShell Profile for macOS with automatic dependency management
 - Easy setup on new machines with a single command
@@ -35,7 +35,7 @@ cd ~/dotfiles
 - zsh configuration (.zshrc, .zshenv, etc.)
 - PowerShell configuration with automatic module and CLI tool installation
 - Oh My Zsh setup with custom themes and plugins
-- Oh My Posh with custom theme (`my-quick-term.omp.json`)
+- Starship prompt with custom theme (`starship.toml`)
 - Nerd Fonts installation (FiraCode, Hack, JetBrainsMono, Meslo)
 - Homebrew packages and casks
 - Terminal preferences
@@ -53,11 +53,12 @@ cd ~/dotfiles
   - Automatically checks for and installs required PowerShell modules and CLI tools
   - Integrates with existing dotfiles synchronization system
   - Configures PSReadLine with syntax highlighting and command prediction
-  - Sets up Terminal-Icons with emoji support for macOS
-  - Configures Oh My Posh with the same custom theme as zsh
+  - Uses Starship prompt with custom theme for beautiful cross-shell experience
+  - Detects and warns if Nerd Fonts are not installed for proper symbol display
   - Provides aliases for all CLI tools consistent with zsh aliases
   - Includes utility functions for Git, navigation, and system management
   - Synchronization command `syncps` for keeping profile in sync with dotfiles repo
+  - Profile reload functionality with duplicate message prevention
 
 ### Terminal Session Management
 
