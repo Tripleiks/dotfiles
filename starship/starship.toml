@@ -12,8 +12,8 @@ error_symbol = "[╰─✗](bold red)"
 vimcmd_symbol = "[╰─❮](bold yellow)"
 
 [username]
-style = "bold yellow"
-format = "╭─[$user]($style)"
+style_user = "bold yellow"
+format = "╭─[$user](${style})"
 show_always = true
 
 [hostname]
