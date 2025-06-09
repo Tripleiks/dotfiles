@@ -17,25 +17,59 @@ A personal dotfiles management system for zsh and PowerShell configuration, CLI 
 
 ## Installation
 
-To install these dotfiles on a new machine:
+### Prerequisites
+
+- macOS or Linux
+- Git (will be installed if not present)
+- Homebrew (will be installed if not present on macOS)
+- Internet connection for downloading dependencies
+
+### Quick Install
+
+To install these dotfiles on a new machine with a single command:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Tripleiks/dotfiles/main/install.sh | bash
 ```
 
-Or if you've already cloned the repository:
+### Manual Install
+
+If you prefer to review the code first or have already cloned the repository:
 
 ```bash
-cd ~/dotfiles
+git clone https://github.com/Tripleiks/dotfiles.git ~/Coding/GitHub/dotfiles
+cd ~/Coding/GitHub/dotfiles
 ./install.sh
+```
+
+### What Happens During Installation
+
+The installation script will:
+
+1. Back up any existing configuration files before replacing them
+2. Install Homebrew (on macOS) if not already installed
+3. Install Nerd Fonts for proper symbol rendering
+4. Install Oh My Zsh and custom plugins
+5. Install Starship prompt for both shells
+6. Install required CLI tools via Homebrew
+7. Set up PowerShell environment with modules and configurations
+8. Create symbolic links for all configuration files
+9. Configure Git with global settings
+
+### Verification
+
+After installation, you can verify everything is set up correctly by running:
+
+```bash
+./test-install.sh
 ```
 
 ## What's Included
 
 - zsh configuration (.zshrc, .zshenv, etc.)
 - PowerShell configuration with automatic module and CLI tool installation
-- Oh My Zsh setup with custom themes and plugins
-- Starship prompt with custom theme (`starship.toml`)
+- Oh My Zsh setup with custom plugins
+- Starship prompt with custom theme (`starship.toml`) for both PowerShell and zsh
 - Nerd Fonts installation (FiraCode, Hack, JetBrainsMono, Meslo)
 - Homebrew packages and casks
 - Terminal preferences
