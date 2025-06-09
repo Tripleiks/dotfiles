@@ -41,7 +41,7 @@ function Write-ColorMessage {
 
 # Define repository information
 $repoOwner = "Tripleiks"
-$repoName = "PowerShellScripts"  # Adjust this to your actual repository name
+$repoName = "PowerShell-Scripts"  # Adjusted to your actual repository name
 $repoUrl = "https://github.com/$repoOwner/$repoName.git"
 $localRepoPath = "$HOME/.config/powershell/Repository"
 
