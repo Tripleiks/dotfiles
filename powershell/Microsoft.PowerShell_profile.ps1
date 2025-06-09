@@ -258,6 +258,20 @@ function Initialize-PowerShellEnvironment {
     else {
         Write-ColorMessage "⚠️ Additional modules installation script not found: $additionalModulesScript" $colors.Warning
     }
+    
+    # Sync PowerShell Script Repository
+    $syncRepoScript = "$SCRIPTS_DIR/Sync-PowerShellRepository.ps1"
+    if (Test-Path $syncRepoScript) {
+        try {
+            & $syncRepoScript -Force:$Force -Quiet:$Quiet
+        }
+        catch {
+            Write-ColorMessage "❌ Error syncing PowerShell Repository: $_" $colors.Error
+        }
+    }
+    else {
+        Write-ColorMessage "⚠️ PowerShell Repository sync script not found: $syncRepoScript" $colors.Warning
+    }
 }
 #endregion
 
@@ -1014,10 +1028,24 @@ function Update-AdditionalModules {
     }
 }
 
+function Sync-PowerShellRepository {
+    param(
+        [switch]$Force
+    )
+    
+    $syncRepoScript = "$SCRIPTS_DIR/Sync-PowerShellRepository.ps1"
+    if (Test-Path $syncRepoScript) {
+        & $syncRepoScript -Force:$Force
+    } else {
+        Write-ColorMessage "⚠️ PowerShell Repository sync script not found: $syncRepoScript" $colors.Warning
+    }
+}
+
 # Set alias for updating modules
 Set-Alias -Name updatemodules -Value Update-AllModules
 Set-Alias -Name updatem365 -Value Update-M365AzureModules
 Set-Alias -Name updateaddons -Value Update-AdditionalModules
+Set-Alias -Name syncrepo -Value Sync-PowerShellRepository
 
 #region Microsoft 365 and Azure Functions
 # Microsoft 365 and Azure connection functions
