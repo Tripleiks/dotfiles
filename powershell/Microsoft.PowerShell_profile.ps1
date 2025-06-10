@@ -62,6 +62,47 @@ function Test-Command {
     }
 }
 
+# Function to use CLI tools with proper path resolution
+function Use-CliTool {
+    param(
+        [Parameter(Mandatory=$true, Position=0)]
+        [string]$ToolName,
+        
+        [Parameter(ValueFromRemainingArguments=$true)]
+        $Arguments
+    )
+    
+    # Check if we have a known path for this tool
+    if ($global:CliToolPaths.ContainsKey($ToolName)) {
+        $toolPath = $global:CliToolPaths[$ToolName]
+        
+        # Convert arguments to string array and handle special characters
+        $argArray = @()
+        foreach ($arg in $Arguments) {
+            $argArray += $arg
+        }
+        
+        # Execute the tool with arguments
+        & $toolPath $argArray
+    }
+    else {
+        # Try to use the tool from PATH
+        if (Test-Command $ToolName) {
+            # Convert arguments to string array
+            $argArray = @()
+            foreach ($arg in $Arguments) {
+                $argArray += $arg
+            }
+            
+            # Execute the tool with arguments
+            & $ToolName $argArray
+        }
+        else {
+            Write-ColorMessage "⚠️ CLI tool not found: $ToolName" $colors.Warning
+        }
+    }
+}
+
 # Set variables
 $DOTFILES_DIR = "$HOME/coding/github/dotfiles"
 $SCRIPTS_DIR = "$DOTFILES_DIR/powershell/Scripts"
