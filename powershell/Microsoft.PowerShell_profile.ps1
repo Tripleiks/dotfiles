@@ -12,6 +12,13 @@
     Date: 2025-06-09
 #>
 
+# Initialize profile load counter to prevent duplicate messages
+# This is especially important for terminals like Warp that may load the profile multiple times
+if (-not (Test-Path variable:global:ProfileLoadCount)) {
+    $global:ProfileLoadCount = 0
+}
+$global:ProfileLoadCount++
+
 #region Variables and Helper Functions
 # Colors for output
 $colors = @{
@@ -73,28 +80,27 @@ if (-not (Test-Path $env:STARSHIP_CONFIG)) {
 
 # Note: Using built-in $IsWindows, $IsMacOS, and $IsLinux automatic variables
 
-# Ensure Homebrew paths are in PATH
-# This ensures CLI tools are accessible in all environments (including Warp)
-if ($IsMacOS) {
-    # Common Homebrew paths on macOS
+# Set up CLI tool paths for consistent access across all environments
+function Set-CliToolPaths {
+    # Add Homebrew paths to PATH if they exist
     $homebrewPaths = @(
         "/opt/homebrew/bin",
         "/opt/homebrew/sbin",
-        "/usr/local/bin"
+        "/usr/local/bin",
+        "/usr/local/sbin"
     )
-    
-    # Add Homebrew paths to PATH if they're not already there
+
     foreach ($path in $homebrewPaths) {
         if (Test-Path $path) {
-            if (-not ($env:PATH -split [IO.Path]::PathSeparator).Contains($path)) {
+            if (-not $env:PATH.Contains($path)) {
                 $env:PATH = "$path" + [IO.Path]::PathSeparator + $env:PATH
             }
         }
     }
-    
-    # Define full paths for common CLI tools to ensure they work in all environments
+
+    # Define CLI tool paths
     $cliToolPaths = @{
-        # File management and navigation
+        # File and directory tools
         "eza" = "/opt/homebrew/bin/eza"
         "bat" = "/opt/homebrew/bin/bat"
         "rg" = "/opt/homebrew/bin/rg"
@@ -105,8 +111,7 @@ if ($IsMacOS) {
         "fzf" = "/opt/homebrew/bin/fzf"
         "yazi" = "/opt/homebrew/bin/yazi"
         "zoxide" = "/opt/homebrew/bin/zoxide"
-        
-        # System monitoring and utilities
+        # System monitoring tools
         "btop" = "/opt/homebrew/bin/btop"
         "gping" = "/opt/homebrew/bin/gping"
         "doggo" = "/opt/homebrew/bin/doggo"
@@ -117,8 +122,7 @@ if ($IsMacOS) {
         "fastfetch" = "/opt/homebrew/bin/fastfetch"
         "cmatrix" = "/opt/homebrew/bin/cmatrix"
         "figlet" = "/opt/homebrew/bin/figlet"
-        
-        # Development tools
+        # Utility tools
         "age" = "/opt/homebrew/bin/age"
         "tldr" = "/opt/homebrew/bin/tldr"
         "asciinema" = "/opt/homebrew/bin/asciinema"
@@ -132,24 +136,15 @@ if ($IsMacOS) {
         "npm" = "/opt/homebrew/bin/npm"
         "python3" = "/opt/homebrew/bin/python3"
         "pip3" = "/opt/homebrew/bin/pip3"
-        "php" = "/opt/homebrew/bin/php"
     }
-    
-    # Function to safely use CLI tools with full paths
-    function Use-CliTool {
-        param(
-            [Parameter(Mandatory=$true)]
-            [string]$Tool,
-            
-            [Parameter(ValueFromRemainingArguments=$true)]
-            $Arguments
-        )
-        
-        if ($cliToolPaths.ContainsKey($Tool)) {
-            if (Test-Path $cliToolPaths[$Tool]) {
-                & $cliToolPaths[$Tool] @Arguments
-                return $true
-            } else {
+
+    # Add CLI tool paths to PATH if they exist
+    foreach ($tool in $cliToolPaths.Keys) {
+        $path = $cliToolPaths[$tool]
+        if (Test-Path $path) {
+            $directory = Split-Path -Parent $path
+            if (-not $env:PATH.Contains($directory)) {
+                $env:PATH = "$directory" + [IO.Path]::PathSeparator + $env:PATH
                 # Try to find the tool in Homebrew paths
                 foreach ($path in $homebrewPaths) {
                     $fullPath = Join-Path $path $Tool
@@ -173,7 +168,9 @@ if ($IsMacOS) {
         }
     }
     
-    Write-ColorMessage "[INFO] CLI tool paths configured for consistent access across all environments" $colors.Info
+    if ($global:ProfileLoadCount -eq 1) {
+        Write-ColorMessage "[INFO] CLI tool paths configured for consistent access across all environments" $colors.Info
+    }
 }
 
 # Add custom modules directory to PSModulePath if it exists
@@ -343,9 +340,21 @@ if (-not (Get-Module -Name PSReadLine)) {
         Import-Module PSReadLine -DisableNameChecking -ErrorAction Stop
     }
     catch {
-        if (-not $global:ProfileLoadCount -or $global:ProfileLoadCount -eq 1) {
+        if ($global:ProfileLoadCount -eq 1) {
             Write-ColorMessage "⚠️ PSReadLine not available: $($_.Exception.Message)" $colors.Warning
         }
+    }
+}
+
+# Special handling for fzf binary path before importing PSFzf
+if ($IsMacOS) {
+    # Ensure fzf binary path is in the environment
+    $fzfPath = "/opt/homebrew/bin/fzf"
+    if (Test-Path $fzfPath) {
+        # Set FZF_DEFAULT_COMMAND for better file finding
+        $env:FZF_DEFAULT_COMMAND = 'fd --type file --follow --hidden --exclude .git'
+        # Set environment variable for PSFzf module
+        $env:PSFZF_FZF_PATH = $fzfPath
     }
 }
 
@@ -357,12 +366,20 @@ foreach ($module in $requiredModules) {
         $moduleAvailable = Get-Module -ListAvailable -Name $moduleName -ErrorAction SilentlyContinue
         
         if ($moduleAvailable) {
-            # Module exists, try to import it
-            Import-Module $moduleName -DisableNameChecking -ErrorAction Stop
+            # Special handling for PSFzf to prevent duplicate errors
+            if ($moduleName -eq "PSFzf") {
+                # Only try to import PSFzf if we haven't already tried
+                if (-not (Get-Module -Name PSFzf)) {
+                    Import-Module $moduleName -DisableNameChecking -ErrorAction Stop
+                }
+            } else {
+                # For other modules, import normally
+                Import-Module $moduleName -DisableNameChecking -ErrorAction Stop
+            }
         }
         else {
             # Module doesn't exist, try to install it if we're not in a restricted environment
-            if (-not $global:ProfileLoadCount -or $global:ProfileLoadCount -eq 1) {
+            if ($global:ProfileLoadCount -eq 1) {
                 Write-ColorMessage "Module $moduleName not found. Attempting to install..." $colors.Warning
                 try {
                     Install-Module -Name $moduleName -Force -AllowClobber -Scope CurrentUser -ErrorAction Stop
@@ -376,7 +393,10 @@ foreach ($module in $requiredModules) {
         }
     }
     catch {
-        Write-ColorMessage "⚠️ Failed to import module: $moduleName - $($_.Exception.Message)" $colors.Warning
+        # Only show error messages on first profile load
+        if ($global:ProfileLoadCount -eq 1) {
+            Write-ColorMessage "⚠️ Failed to import module: $moduleName - $($_.Exception.Message)" $colors.Warning
+        }
     }
 }
 
@@ -406,14 +426,14 @@ if (Get-Module -Name PSReadLine) {
     }
     
     # Only show PSReadLine message on first load
-    if (-not $global:ProfileLoadCount -or $global:ProfileLoadCount -eq 1) {
+    if ($global:ProfileLoadCount -eq 1) {
         Write-ColorMessage "[INFO] PSReadLine loaded and configured with custom colors." $colors.Info
     }
 }
 
 # Note: We're using eza's built-in icons instead of Terminal-Icons for a more consistent experience
 # Only show icons message on first load
-if (-not $global:ProfileLoadCount -or $global:ProfileLoadCount -eq 1) {
+if ($global:ProfileLoadCount -eq 1) {
     Write-ColorMessage "[INFO] Using eza's built-in icons for file listings." $colors.Info
 }
 
@@ -441,7 +461,7 @@ if (Test-Path $starshipPath) {
     & $starshipPath init powershell | Invoke-Expression
     
     # Only show initialization message on first load
-    if (-not $global:ProfileLoadCount -or $global:ProfileLoadCount -eq 1) {
+    if ($global:ProfileLoadCount -eq 1) {
         Write-ColorMessage "[INFO] Starship prompt initialized with config: $env:STARSHIP_CONFIG" $colors.Info
     }
     
@@ -467,7 +487,7 @@ if (Test-Path $starshipPath) {
     Invoke-Expression (&starship init powershell)
     
     # Only show initialization message on first load
-    if (-not $global:ProfileLoadCount -or $global:ProfileLoadCount -eq 1) {
+    if ($global:ProfileLoadCount -eq 1) {
         Write-ColorMessage "[INFO] Starship prompt initialized with config: $env:STARSHIP_CONFIG" $colors.Info
     }
 } else {
@@ -592,7 +612,7 @@ if (Test-Command "eza") {
     Set-Alias -Name lsm -Value Get-ChildItemEzaModified
     
     # Only show Eza configuration message on first load
-    if (-not $global:ProfileLoadCount -or $global:ProfileLoadCount -eq 1) {
+    if ($global:ProfileLoadCount -eq 1) {
         Write-ColorMessage "[INFO] Eza configured with icons support and common aliases:" $colors.Info
         Write-ColorMessage "  ez    - Basic eza with icons" $colors.Info
         Write-ColorMessage "  ll    - List in long format" $colors.Info
@@ -1399,7 +1419,7 @@ Set-Alias -Name updateall -Value Update-AllPackages
 
 #region Initialization
 # Display welcome message - only on first load
-if (-not $global:ProfileLoadCount -or $global:ProfileLoadCount -eq 1) {
+if ($global:ProfileLoadCount -eq 1) {
     $greeting = Get-Greeting
     Write-Host "`n$greeting $env:USER ⚡`n" -ForegroundColor $colors.Emphasis
 }
@@ -1409,7 +1429,8 @@ if (-not $global:ProfileLoadCount -or $global:ProfileLoadCount -eq 1) {
 # Initialize-PowerShellEnvironment -Quiet
 
 # Final message - only show on first load
-if (-not $global:ProfileLoadCount -or $global:ProfileLoadCount -eq 1) {
+if ($global:ProfileLoadCount -eq 1) {
     Write-ColorMessage "[INFO] PowerShell profile loaded successfully." $colors.Info
 }
 #endregion
+
