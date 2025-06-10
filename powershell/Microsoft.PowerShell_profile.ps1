@@ -329,13 +329,27 @@ function Initialize-PowerShellEnvironment {
 #region Module Imports and Configuration
 # Import required modules if available
 $requiredModules = @(
-    @{ Name = "PSReadLine"; MinVersion = "2.2.0" },
+    # PSReadLine is handled separately to avoid version conflicts
     @{ Name = "posh-git"; MinVersion = "1.0.0" },
-    # Removed oh-my-posh from required modules
     @{ Name = "z"; MinVersion = "1.1.13" },
     @{ Name = "PSFzf"; MinVersion = "2.0.0" }
 )
 
+# Special handling for PSReadLine to avoid version conflicts
+# PSReadLine is usually already loaded by PowerShell itself
+if (-not (Get-Module -Name PSReadLine)) {
+    try {
+        # Only try to import if not already loaded
+        Import-Module PSReadLine -DisableNameChecking -ErrorAction Stop
+    }
+    catch {
+        if (-not $global:ProfileLoadCount -or $global:ProfileLoadCount -eq 1) {
+            Write-ColorMessage "⚠️ PSReadLine not available: $($_.Exception.Message)" $colors.Warning
+        }
+    }
+}
+
+# Import other modules
 foreach ($module in $requiredModules) {
     $moduleName = $module.Name
     try {
