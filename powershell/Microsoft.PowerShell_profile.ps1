@@ -340,12 +340,30 @@ $requiredModules = @(
 foreach ($module in $requiredModules) {
     $moduleName = $module.Name
     try {
-        if (Get-Module -ListAvailable -Name $moduleName) {
-            Import-Module $moduleName -DisableNameChecking
+        # Check if module is available
+        $moduleAvailable = Get-Module -ListAvailable -Name $moduleName -ErrorAction SilentlyContinue
+        
+        if ($moduleAvailable) {
+            # Module exists, try to import it
+            Import-Module $moduleName -DisableNameChecking -ErrorAction Stop
+        }
+        else {
+            # Module doesn't exist, try to install it if we're not in a restricted environment
+            if (-not $global:ProfileLoadCount -or $global:ProfileLoadCount -eq 1) {
+                Write-ColorMessage "Module $moduleName not found. Attempting to install..." $colors.Warning
+                try {
+                    Install-Module -Name $moduleName -Force -AllowClobber -Scope CurrentUser -ErrorAction Stop
+                    Import-Module $moduleName -DisableNameChecking -ErrorAction Stop
+                    Write-ColorMessage "✅ Successfully installed and imported $moduleName" $colors.Success
+                }
+                catch {
+                    Write-ColorMessage "⚠️ Failed to install module: $moduleName. Run Install-RequiredModules.ps1 manually." $colors.Warning
+                }
+            }
         }
     }
     catch {
-        Write-ColorMessage "⚠️ Failed to import module: $moduleName" $colors.Warning
+        Write-ColorMessage "⚠️ Failed to import module: $moduleName - $($_.Exception.Message)" $colors.Warning
     }
 }
 
