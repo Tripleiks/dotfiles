@@ -355,27 +355,67 @@ if ($IsMacOS) {
         $env:FZF_DEFAULT_COMMAND = 'fd --type file --follow --hidden --exclude .git'
         # Set environment variable for PSFzf module
         $env:PSFZF_FZF_PATH = $fzfPath
+        
+        # Add fzf directory to PATH if not already there
+        $fzfDir = Split-Path -Parent $fzfPath
+        if (-not $env:PATH.Contains($fzfDir)) {
+            $env:PATH = "$fzfDir" + [IO.Path]::PathSeparator + $env:PATH
+        }
+        
+        # Create a symlink to fzf in a directory that's definitely in PATH
+        # This helps with terminals like Warp that might have PATH issues
+        $localBinPath = "$HOME/.local/bin"
+        if (-not (Test-Path $localBinPath)) {
+            New-Item -ItemType Directory -Path $localBinPath -Force | Out-Null
+        }
+        
+        # Add local bin to PATH if not already there
+        if (-not $env:PATH.Contains($localBinPath)) {
+            $env:PATH = "$localBinPath" + [IO.Path]::PathSeparator + $env:PATH
+        }
     }
 }
 
 # Import other modules
 foreach ($module in $requiredModules) {
     $moduleName = $module.Name
+    
+    # Special handling for PSFzf module
+    if ($moduleName -eq "PSFzf") {
+        # Only try to import PSFzf if fzf is available
+        $fzfCommand = Get-Command fzf -ErrorAction SilentlyContinue
+        if ($fzfCommand) {
+            # fzf is in PATH, try to import PSFzf
+            try {
+                if (-not (Get-Module -Name PSFzf)) {
+                    Import-Module PSFzf -DisableNameChecking -ErrorAction Stop
+                    if ($global:ProfileLoadCount -eq 1) {
+                        Write-ColorMessage "[INFO] PSFzf loaded with fzf from: $($fzfCommand.Source)" $colors.Success
+                    }
+                }
+            } catch {
+                if ($global:ProfileLoadCount -eq 1) {
+                    Write-ColorMessage "⚠️ Failed to import PSFzf module: $($_.Exception.Message)" $colors.Warning
+                }
+            }
+        } else {
+            # Only show this message once
+            if ($global:ProfileLoadCount -eq 1) {
+                Write-ColorMessage "⚠️ Skipping PSFzf module: fzf binary not found in PATH" $colors.Warning
+                Write-ColorMessage "   Install fzf with: brew install fzf" $colors.Info
+            }
+        }
+        continue  # Skip to next module
+    }
+    
+    # Standard handling for other modules
     try {
         # Check if module is available
         $moduleAvailable = Get-Module -ListAvailable -Name $moduleName -ErrorAction SilentlyContinue
         
         if ($moduleAvailable) {
-            # Special handling for PSFzf to prevent duplicate errors
-            if ($moduleName -eq "PSFzf") {
-                # Only try to import PSFzf if we haven't already tried
-                if (-not (Get-Module -Name PSFzf)) {
-                    Import-Module $moduleName -DisableNameChecking -ErrorAction Stop
-                }
-            } else {
-                # For other modules, import normally
-                Import-Module $moduleName -DisableNameChecking -ErrorAction Stop
-            }
+            # Import module normally
+            Import-Module $moduleName -DisableNameChecking -ErrorAction Stop
         }
         else {
             # Module doesn't exist, try to install it if we're not in a restricted environment
